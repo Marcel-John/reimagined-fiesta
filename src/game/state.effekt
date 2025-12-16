@@ -1,0 +1,28 @@
+module src/game/state
+
+type Screen {
+  Start()
+  Game()
+  End()
+}
+
+type Owner {
+  Player()
+  AI()
+  Neutral()
+}
+
+record Planet (
+  id: Int,
+  x: Int,
+  y: Int,
+  radius: Int,
+  ships: Int,
+  owner: Owner
+)
+
+record GameState (
+  screen: Screen,
+  planets: List[Planet],
+  selected: Int // Planet-ID negative if none selectet
+)
