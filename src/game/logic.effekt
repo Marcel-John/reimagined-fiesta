@@ -1,0 +1,9 @@
+module src/game/logic
+
+import src/game/state
+
+def initialGameState(): GameState = {
+  GameState(screen = Start(),
+  planets = [],
+  selected = -1)
+}
