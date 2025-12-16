@@ -26,3 +26,18 @@ record GameState (
   planets: List[Planet],
   selected: Int // Planet-ID negative if none selectet
 )
+
+def printGameState(gameState: GameState): Unit = {
+  printScreeen(gameState.screen)
+  printSelectet(gameState.selected)
+}
+
+def printScreeen(screen: Screen): Unit = screen match{
+case Start() => println("Start")
+case Game() => println("Game")
+case End() => println("End")
+}
+
+def printSelectet(selected: Int): Unit = {
+  println(selected)
+}
