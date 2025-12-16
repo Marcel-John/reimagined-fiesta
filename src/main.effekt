@@ -1,5 +1,11 @@
 module main // must be named same as the file!
 
 import src/lib
+import src/game/logic
+import src/game/state
 
-def main(): Unit = println(helloWorld())
+def main(): Unit = {
+val state = initialGameState()
+// game loop}
+printGameState(state)
+println(helloWorld())}
