@@ -2,8 +2,11 @@ module src/game/logic
 
 import src/game/state
 
+val Planet1: Planet= Planet(id=0, x=0, y=0, radius=100, shipsPlayer=100, shipsAI=0, owner=Player())
+val Planet2: Planet= Planet(id=1, x=100, y=100, radius=100, shipsPlayer=0, shipsAI=100, owner=AI())
+
 def initialGameState(): GameState = {
   GameState(screen = Start(),
-  planets = [],
+  planets = [Planet1, Planet2],
   selected = -1)
 }
