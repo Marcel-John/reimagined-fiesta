@@ -17,7 +17,8 @@ record Planet (
   x: Int,
   y: Int,
   radius: Int,
-  ships: Int,
+  shipsPlayer: Int,
+  shipsAI: Int,
   owner: Owner
 )
 
@@ -27,8 +28,10 @@ record GameState (
   selected: Int // Planet-ID negative if none selectet
 )
 
+// printing stuff for controlling 
 def printGameState(gameState: GameState): Unit = {
   printScreeen(gameState.screen)
+  printAllPlanets(gameState.planets)
   printSelectet(gameState.selected)
 }
 
@@ -40,4 +43,28 @@ case End() => println("End")
 
 def printSelectet(selected: Int): Unit = {
   println(selected)
+}
+
+def printAllPlanets(planets : List[Planet]): Unit ={
+  println("Now Printing Planets")
+planets.foreach {x=>
+printPlanet(x)
+}
+  println("Printing Planets Done")
+}
+
+def printPlanet(planet: Planet): Unit = {
+  println(planet.id)
+  println(planet.x)
+  println(planet.y)
+  println(planet.radius)
+  println(planet.shipsPlayer)
+  println(planet.shipsAI)
+  printOwner(planet.owner)
+}
+
+def printOwner(owner: Owner) : Unit = owner match{
+  case Player() => println("Owner: Player")
+  case AI() => println("Owner: AI")
+  case Neutral() => println("Owner: Neutral")
 }
