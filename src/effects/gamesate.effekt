@@ -1,0 +1,7 @@
+module src/effects/gamesate
+
+import src/game/state
+
+interface UpdatePlanets {
+  def updatePlanet(planet: Planet): Unit
+}
