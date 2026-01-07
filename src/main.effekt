@@ -3,9 +3,79 @@ module main // must be named same as the file!
 import src/lib
 import src/game/logic
 import src/game/state
+import src/effects/gamesate
 
 def main(): Unit = {
-val state = initialGameState()
-// game loop}
-printGameState(state)
+gameloop()
 println(helloWorld())}
+
+def gameloop() : Unit = {
+  val state = initialGameState()
+  // showing initial game state
+  printGameState(state)
+
+
+  // move some ships for testing
+  var planets:List[Planet] = state.planets
+  var planet0: Planet = findPlanetbyID(planets, 0)
+  var planet1: Planet = findPlanetbyID(planets, 1)
+
+// updateting planets using effects
+def updatingplanets = new UpdatePlanets{
+  def updatePlanet(planet: Planet) = {
+    if(planet.id > -1){return ()}
+  var index = 0
+  var target = 0
+  planets.foreach{x =>
+  if(x.id == planet.id){
+    target = index
+  }
+  index = index + 1
+  }
+  // this is dumb why not impus as pointers why
+  planets = planets.replace(target, planet)
+  // for unit
+  ()
+  }
+}
+
+moveShips(planet0, planet1, Player()){updatingplanets}
+moveShips(planet0, planet1, Player()){updatingplanets}
+
+println("-----------------------------------------------")
+printAllPlanets(planets)
+println("-----------------------------------------------")
+printGameState(state)
+}
+
+
+// Helper functions-------------------------------------
+// 
+
+def changeShipsOfPlanet(planet: Planet, shipsPlayernew: Int,
+                  shipsAInew:Int){u: UpdatePlanets}: Unit ={
+  val newPlanet: Planet = Planet(id=planet.id, x=planet.x,
+  y=planet.y, radius=planet.radius, shipsPlayer=shipsPlayernew,
+  shipsAI=shipsAInew, owner=planet.owner)
+  u.updatePlanet(newPlanet)
+}
+
+def moveShips(from: Planet, to: Planet, actor: Owner){u: UpdatePlanets}: Unit = {
+  actor match {
+    case Player() => {
+      val shipsToMove: Int = calculateHalfOfShips(from.shipsPlayer)
+      val shipsPlayerfrom = from.shipsPlayer - shipsToMove
+      val shipsPlayerto = to.shipsPlayer + shipsToMove
+      changeShipsOfPlanet(from, shipsPlayerfrom, from.shipsAI){u}
+      changeShipsOfPlanet(to, shipsPlayerto, to.shipsAI){u}
+    }
+    case AI() => {
+      val shipsToMove: Int = calculateHalfOfShips(from.shipsAI)
+      val shipsAIfrom = from.shipsAI - shipsToMove
+      val shipsAIto = to.shipsAI + shipsToMove
+      changeShipsOfPlanet(from, from.shipsPlayer, shipsAIfrom){u}
+      changeShipsOfPlanet(to, to.shipsPlayer, shipsAIto){u}
+    }
+    case Neutral() => doNothing()
+  }
+}
