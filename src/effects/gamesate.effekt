@@ -5,3 +5,8 @@ import src/game/state
 interface UpdatePlanets {
   def updatePlanet(planet: Planet): Unit
 }
+
+interface UpdateGamestate {
+  def changePlanets(planets:List[Planet]): Unit
+  // TODO rest of things changing
+}
