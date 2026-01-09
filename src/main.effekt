@@ -10,7 +10,7 @@ gameloop()
 println(helloWorld())}
 
 def gameloop() : Unit = {
-  val state = initialGameState()
+  var state: GameState = initialGameState()
   // showing initial game state
   printGameState(state)
 
@@ -21,7 +21,7 @@ def gameloop() : Unit = {
   var planet1: Planet = findPlanetbyID(planets, 1)
 
 // updateting planets using effects
-def updatingplanets = new UpdatePlanets{
+def planetschangable = new UpdatePlanets{
   def updatePlanet(planet: Planet) = {
     if(planet.id > -1){return ()}
   var index = 0
@@ -39,18 +39,53 @@ def updatingplanets = new UpdatePlanets{
   }
 }
 
-moveShips(planet0, planet1, Player()){updatingplanets}
-moveShips(planet0, planet1, Player()){updatingplanets}
+// updating gamestate using effects
+def gamesate = new UpdateGamestate{
+  def changePlanets(p:List[Planet]) = {
+    val newstate = GameState(
+      screen = state.screen,
+      planets = p,
+      selected = state.selected)
+    state = newstate
+    ()
+  }
+  // other definintions for functions to change gamestate here
+}
 
-println("-----------------------------------------------")
-printAllPlanets(planets)
-println("-----------------------------------------------")
+moveShips(findPlanetbyID(planets, 0), findPlanetbyID(planets, 1), Player()){planetschangable}
+moveShips(findPlanetbyID(planets, 0), findPlanetbyID(planets, 1), Player()){planetschangable}
+
+// checkin after 99 rounds
+var i = 0
+while(i < 100){
+  i = i + 1
+  moveShips(findPlanetbyID(planets, 0), findPlanetbyID(planets, 1), Player()){planetschangable}
+  updatePlanets(planets){planetschangable}
+}
+
+
+updateGamestate(planets){gamesate}
+// prints for checking
+//println("-----------------------------------------------")
+//printAllPlanets(planets)
+//println("-----------------------------------------------")
 printGameState(state)
 }
 
 
 // Helper functions-------------------------------------
-// 
+
+
+def updatePlanets(p:List[Planet]){u: UpdatePlanets}: Unit ={
+  p.foreach {x=>
+  val changedPlanet: Planet = calculatePlanetUpdate(x)
+  u.updatePlanet(changedPlanet)
+  }
+}
+
+def updateGamestate(p:List[Planet]){s: UpdateGamestate}: Unit = {
+  s.changePlanets(p)
+}
 
 def changeShipsOfPlanet(planet: Planet, shipsPlayernew: Int,
                   shipsAInew:Int){u: UpdatePlanets}: Unit ={
