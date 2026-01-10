@@ -8,5 +8,7 @@ interface UpdatePlanets {
 
 interface UpdateGamestate {
   def changePlanets(planets:List[Planet]): Unit
-  // TODO rest of things changing
+  def cahngeSelected(selected: Int): Unit
+  def changeScreen(newScreen: Screen): Unit
+  def getGameState(): GameState
 }

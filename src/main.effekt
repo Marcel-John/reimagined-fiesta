@@ -49,7 +49,20 @@ def gamesate = new UpdateGamestate{
     state = newstate
     ()
   }
-  // other definintions for functions to change gamestate here
+
+  def cahngeSelected(selected: Int) = {
+    
+  }
+
+  def changeScreen(newScreen: Screen) = {
+    val newstate = GameState(
+      screen = newScreen,
+      planets = state.planets,
+      selected = state.selected)
+    state = newstate
+    ()
+  }
+  def getGameState() = {state}
 }
 
 moveShips(findPlanetbyID(planets, 0), findPlanetbyID(planets, 1), Player()){planetschangable}
