@@ -3,7 +3,8 @@ module src/game/state
 type Screen {
   Start()
   Game()
-  End()
+  EndWin()
+  EndLose()
 }
 
 type Owner {
@@ -38,7 +39,8 @@ def printGameState(gameState: GameState): Unit = {
 def printScreeen(screen: Screen): Unit = screen match{
 case Start() => println("Start")
 case Game() => println("Game")
-case End() => println("End")
+case EndWin() => println("EndWin")
+case EndLose() => println("EndLose")
 }
 
 def printSelectet(selected: Int): Unit = {

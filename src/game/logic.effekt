@@ -7,6 +7,12 @@ record Shipstorage(
   shipsAI: Int
 )
 
+type Wincon {
+  Win()
+  Lose()
+  InGame()
+}
+
 val spawnPlayer = 2
 val spawnAI = 1
 val spawnNeutral = 0
@@ -160,6 +166,58 @@ def changeownershipPlanet(p: Planet): Owner = {
 
   if(p.shipsAI == 0 && p.shipsPlayer > 0){
     result = Player()
+  }
+
+  result
+}
+
+def checkWinOrLose(g: GameState): Wincon = {
+  val planets: List[Planet] = g.planets
+  var hasPlayerPlanets: Bool = false
+  var hasAiPlanets: Bool = false
+  var result = InGame()
+
+  planets.foreach{x=>
+  val p: Planet = x
+  if(isOwnedByPlayer(p)){
+    hasPlayerPlanets = true
+  }
+  if(isOwnedByAI(p)){
+    hasAiPlanets = true
+  }
+  }
+
+  if(hasPlayerPlanets && not(hasAiPlanets)){
+    result = Win()
+  }
+  if(not(hasPlayerPlanets) && hasAiPlanets){
+    result = Lose()
+  }
+
+  result
+}
+
+def isOwnedByPlayer(p: Planet): Bool = {
+  val owner : Owner = p.owner
+  var result : Bool = false
+
+  owner match {
+    case Player() =>{result = true}
+    case AI() =>{result = false}
+    case Neutral() =>{result = false}
+  }
+
+  result
+}
+
+def isOwnedByAI(p: Planet): Bool = {
+  val owner : Owner = p.owner
+  var result : Bool = false
+
+  owner match {
+    case Player() =>{result = false}
+    case AI() =>{result = true}
+    case Neutral() =>{result = false}
   }
 
   result

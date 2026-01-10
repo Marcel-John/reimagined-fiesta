@@ -50,8 +50,13 @@ def gamesate = new UpdateGamestate{
     ()
   }
 
-  def cahngeSelected(selected: Int) = {
-    
+  def cahngeSelected(s: Int) = {
+    val newstate = GameState(
+      screen = state.screen,
+      planets = state.planets,
+      selected = s)
+    state = newstate
+    ()
   }
 
   def changeScreen(newScreen: Screen) = {
@@ -78,6 +83,7 @@ while(i < 100){
 
 
 updateGamestate(planets){gamesate}
+applyWinCon(state){gamesate}
 // prints for checking
 //println("-----------------------------------------------")
 //printAllPlanets(planets)
@@ -88,6 +94,14 @@ printGameState(state)
 
 // Helper functions-------------------------------------
 
+def applyWinCon(g:GameState){s: UpdateGamestate}: Unit ={
+  val stateOfGame: Wincon = checkWinOrLose(g)
+  stateOfGame match{
+    case InGame() => {doNothing()}
+    case Win() => {s.changeScreen(EndWin())}
+    case Lose() => {s.changeScreen(EndLose())}
+  }
+}
 
 def updatePlanets(p:List[Planet]){u: UpdatePlanets}: Unit ={
   p.foreach {x=>
