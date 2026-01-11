@@ -1,0 +1,81 @@
+module src/game/ai 
+
+import src/game/state
+import src/game/logic
+
+record AIView (
+  owndPlanets: List[Planet],
+  playerPlanets: List[Planet]
+)
+
+record AIMove (
+  from: Planet,
+  to: Planet
+)
+
+record AIMovedecision(
+  move: AIMove,
+  isturnUsed: Bool
+)
+
+// Heuristic for AI
+val takePlanet: Int = 100
+val loseBattel: Int = -50
+val weakOwnPlanet: Int = -70
+val losefrom: Int = -200
+val deffendPlanet: Int = 100
+
+def buldAIView(g: GameState): AIView = {
+  
+  val aiPlanets: List[Planet] = filter(g.planets){p=>isOwnedByAI(p)}
+  val playerPlanets: List[Planet] = filter(g.planets){p=>isOwnedByPlayer(p)}
+  val result = AIView(aiPlanets, playerPlanets)
+  result
+}
+
+def allAIMoves(allPlanets: List[Planet]): List[AIMove] = {
+  var result:List[AIMove] = []
+
+  flatMap(allPlanets) { p1 =>
+    map(allPlanets) { p2 =>
+      result.append([AIMove(p1, p2)])
+    }
+  }
+  result
+}
+
+def scoreMove(move: AIMove): Int = {
+  val aiShipsfrom = calculateHalfOfShips(move.from.shipsAI)
+  val playerShipsfrom = move.from.shipsPlayer
+  val aiShipstarget = move.to.shipsAI + aiShipsfrom 
+  val playerShips = move.to.shipsPlayer
+  val borderweakPlanet: Int = 10
+
+  var score: Int = 0
+  if(aiShipstarget > playerShips){score = score + takePlanet}
+  if(aiShipsfrom < playerShipsfrom){score = score + losefrom}
+  if(aiShipstarget < playerShips){score = score + loseBattel}
+  if(aiShipsfrom < borderweakPlanet){score = score + weakOwnPlanet}
+  if(aiShipstarget < playerShips && isOwnedByAI(move.to)){score = score + deffendPlanet}
+
+  // maybe some random bonus????
+  
+  score
+}
+
+def makeMoveDessision(g: GameState): AIMovedecision = {
+  val planets: List[Planet] = g.planets
+  val allMoves: List[AIMove] = allAIMoves(planets)
+  var bestscore: Int = -100000
+  var bestMove: AIMove = AIMove(defaultPlanet, defaultPlanet)
+
+  allMoves.foreach{m=>
+  var score: Int = scoreMove(m)
+  if(score > bestscore){
+    bestMove = m
+    bestscore = score
+    }
+  }
+  AIMovedecision(bestMove, bestscore > 0)
+}
+
