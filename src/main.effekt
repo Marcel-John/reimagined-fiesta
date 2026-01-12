@@ -4,6 +4,8 @@ import src/lib
 import src/game/logic
 import src/game/state
 import src/effects/gamesate
+import src/ffi/input
+
 
 def main(): Unit = {
 gameloop()
@@ -72,6 +74,10 @@ def gamesate = new UpdateGamestate{
 
 moveShips(findPlanetbyID(planets, 0), findPlanetbyID(planets, 1), Player()){planetschangable}
 moveShips(findPlanetbyID(planets, 0), findPlanetbyID(planets, 1), Player()){planetschangable}
+
+println("now the input")
+val input = getInput()
+println(input)
 
 // checkin after 99 rounds
 var i = 0

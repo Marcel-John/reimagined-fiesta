@@ -1,0 +1,14 @@
+module src/ffi/input
+
+import io/console
+
+effect ask(): String
+
+def getInput(): String = console{
+  // it is not possible to get a timer at the same time
+  var input: String  = ""
+  try{
+    input = do ask()
+  }with ask{resume(do readLine())}
+  input
+}
