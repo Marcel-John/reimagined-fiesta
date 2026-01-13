@@ -36,19 +36,19 @@ def buldAIView(g: GameState): AIView = {
 def allAIMoves(allPlanets: List[Planet]): List[AIMove] = {
   var result:List[AIMove] = []
 
-  flatMap(allPlanets) { p1 =>
+  result = flatMap(allPlanets) { p1 =>
     map(allPlanets) { p2 =>
-      result.append([AIMove(p1, p2)])
+      AIMove(p1, p2)
     }
   }
   result
 }
 
 def scoreMove(move: AIMove): Int = {
-  val aiShipsfrom = calculateHalfOfShips(move.from.shipsAI)
-  val playerShipsfrom = move.from.shipsPlayer
-  val aiShipstarget = move.to.shipsAI + aiShipsfrom 
-  val playerShips = move.to.shipsPlayer
+  val aiShipsfrom: Int = calculateHalfOfShips(move.from.shipsAI)
+  val playerShipsfrom: Int = move.from.shipsPlayer
+  val aiShipstarget: Int = move.to.shipsAI + aiShipsfrom 
+  val playerShips: Int = move.to.shipsPlayer
   val borderweakPlanet: Int = 10
 
   var score: Int = 0
