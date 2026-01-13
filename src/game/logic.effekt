@@ -22,13 +22,14 @@ val battelstrngthAI = 1
 val battelstrngthNeutral = 0
 
 val Planettest: Planet= Planet(id=-1, x=0, y=0, radius=0, shipsPlayer=0, shipsAI=0, owner=Neutral())
-val Planet0: Planet= Planet(id=0, x=0, y=0, radius=100, shipsPlayer=100, shipsAI=0, owner=Player())
+val Planet0: Planet= Planet(id=0, x=0, y=0, radius=100, shipsPlayer=10, shipsAI=0, owner=Player())
 val Planet1: Planet= Planet(id=1, x=100, y=100, radius=100, shipsPlayer=0, shipsAI=100, owner=AI())
+val freeforAI: Planet= Planet(id=2, x=100, y=100, radius=100, shipsPlayer=0, shipsAI=0, owner=Neutral())
 val defaultPlanet: Planet = Planet(id=-1, x=0, y=0, radius=0, shipsPlayer=0, shipsAI=0, owner=Neutral())
 
 def initialGameState(): GameState = {
   GameState(screen = Start(),
-  planets = [Planet0, Planet1],
+  planets = [Planet0, Planet1, freeforAI],
   selected = -1)
 }
 

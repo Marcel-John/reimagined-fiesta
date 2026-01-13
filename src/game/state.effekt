@@ -1,5 +1,7 @@
 module src/game/state
 
+import io/console
+
 type Screen {
   Start()
   Game()
@@ -70,3 +72,122 @@ def printOwner(owner: Owner) : Unit = owner match{
   case AI() => println("Owner: AI")
   case Neutral() => println("Owner: Neutral")
 }
+
+def isStartscreen(s: Screen) : Bool = s match{
+  case Start() => true
+  case _ => false
+}
+
+def isGamescreen(s: Screen) : Bool = s match{
+  case Game() => true
+  case _ => false
+}
+
+def isGameOverscreen(s: Screen) : Bool = s match{
+  case EndWin() => true
+  case EndLose() => true
+  case _ => false
+}
+
+def hasPlayerWon(s: Screen): Bool = {
+  var result = false
+  if(isGameOverscreen(s)){
+    s match {
+      case EndWin() => result = true
+      case _ => ()
+    }
+  }
+  result
+}
+
+def printStartscreen(): Unit = {
+  line()
+  center("PLANET CONQUEST")
+  line()
+  empty()
+  println("s) start")
+  println("q) quit")
+  prompt()
+}
+
+def line(): Unit ={println("==================================")}
+
+def empty(): Unit ={println("")}
+  
+def center(text: String): Unit ={println("   " ++ text)}
+  
+def prompt(): Unit ={
+  println("")
+  println("> ")}
+
+// print für game state
+def ownerName(o: Owner): String =
+  o match {
+    case Player()  => "Player"
+    case AI()      => "AI"
+    case Neutral() => "Neutral"
+  }
+
+
+def planetRow(p: Planet, selected: Int): String ={
+  var mark = " "
+  if(selected == p.id){
+    mark = ">"
+  }
+// pad für besseres formating
+  mark ++
+  " " ++ show(p.id) ++
+  " | " ++ ownerName(p.owner) ++
+  " | " ++ show(p.shipsPlayer) ++
+  " | " ++ show(p.shipsAI)}
+
+def drawPlanets(planets: List[Planet], selected: Int): Unit ={
+  println(" ID | Owner   | Player |  AI")
+  println("----+---------+--------+------")
+
+  planets.foreach { p =>
+    println(planetRow(p, selected))
+  }}
+
+def drawGameState(state: GameState, p: Owner): Unit ={
+  println("=====================================================")
+  println(
+    " TURN: " ++
+    (if(isPlayer(p)){"Player"}  else {"AI"}) ++
+    "        Selected: " ++ if(state.selected == -1){"None"}else{show(state.selected)}
+  )
+  println("=====================================================")
+  println("")
+  drawPlanets(state.planets, state.selected)
+  println("")
+  println("Commands:")
+  println("  to select type the <id>")
+  println("  to undo select type nothing")
+  println("  to end the game type q")}
+
+  def isPlayer(p: Owner): Bool = p match {
+    case Player()=> true
+    case _ => false
+  }
+
+  def printAIMove(aiDidMove: Bool, from: Int, to: Int) =
+  if (not(aiDidMove)) {
+    println("AI: holds position.")
+  } else {
+    println("AI: moves ships from Planet " ++ show(from) ++ " to Planet " ++ show(to))
+  }
+
+
+  def endScreen(playerWon: Bool) ={
+  println("=====================================================")
+  println("                      GAME OVER                     ")
+  println("=====================================================")
+  println("")
+
+  if(playerWon){
+    println("You won! Congratulations!")
+    }else{
+      println("You lost! Better luck next time!")
+      }
+  println("")
+  println("Press any key to return to the start screen...")}

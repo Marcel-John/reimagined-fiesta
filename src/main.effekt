@@ -5,12 +5,148 @@ import src/game/logic
 import src/game/state
 import src/effects/gamesate
 import src/ffi/input
+import src/game/ai
 
 
 def main(): Unit = {
-gameloop()
-println(helloWorld())}
+  // test loop
+//gameloop()
+// 
+//console version
+consolegameloop()
 
+println(helloWorld())
+}
+
+def consolegameloop() : Unit = {
+  // some inital states
+  var isGameRunning: Bool = true
+  var state: GameState = initialGameState()
+  var planets:List[Planet] = state.planets
+
+  // updateting planets using effects
+def planetschangable = new UpdatePlanets{
+  def updatePlanet(planet: Planet) = {
+    if(planet.id > -1){return ()}
+  var index = 0
+  var target = -1
+  planets.foreach{x =>
+  if(x.id == planet.id){
+    target = index
+  }
+  index = index + 1
+  }
+  // this is dumb why not impus as pointers why
+  if(target > -1){
+  planets = planets.replace(target, planet)}
+  // for unit
+  ()
+  }
+}
+
+// updating gamestate using effects
+def gamesate = new UpdateGamestate{
+  def changePlanets(p:List[Planet]) = {
+    val newstate = GameState(
+      screen = state.screen,
+      planets = p,
+      selected = state.selected)
+    state = newstate
+    ()
+  }
+
+  def cahngeSelected(s: Int) = {
+    val newstate = GameState(
+      screen = state.screen,
+      planets = state.planets,
+      selected = s)
+    state = newstate
+    ()
+  }
+
+  def changeScreen(newScreen: Screen) = {
+    val newstate = GameState(
+      screen = newScreen,
+      planets = state.planets,
+      selected = state.selected)
+    state = newstate
+    ()
+  }
+  def getGameState() = {state}
+}
+
+// actual loop
+  while(isGameRunning){
+    // managing the start screen
+    if(isStartscreen(state.screen)){
+      printStartscreen()
+      var input = getInput()
+      input match{
+        case "s" => gamesate.changeScreen(Game())
+        case "q" => isGameRunning = false
+        case _ => ()
+      }
+    }
+
+    // Game Loop
+    if(isGamescreen(state.screen)){
+
+      // Player turn
+      drawGameState(gamesate.getGameState(), Player())
+      var input: String = getInput()
+      var inputInt: Int = -1
+      input match {
+        case "" => gamesate.cahngeSelected(-1)
+        case "q" => isGameRunning = false
+        case "0" => inputInt = 0
+        case "1" => inputInt = 1
+        case "2" => inputInt = 2
+        case "3" => inputInt = 3
+        case "4" => inputInt = 4
+        case "5" => inputInt = 5
+        case "6" => inputInt = 6
+        case "7" => inputInt = 7
+        case "8" => inputInt = 8
+        case "9" => inputInt = 9
+        case _ => ()
+        }
+      var p: Planet = findPlanetbyID(planets, inputInt)
+      if(p.id != -1){
+        if(state.selected == -1){
+          gamesate.cahngeSelected(inputInt)
+        }else{
+          moveShips(findPlanetbyID(planets, state.selected), findPlanetbyID(planets, inputInt), Player()){planetschangable}
+          gamesate.cahngeSelected(-1)
+        }
+      }
+      
+
+      // AI turn
+      var aimove:AIMovedecision = makeMoveDessision(state)
+      var didMove: Bool = aimove.isturnUsed
+      var from: Int = aimove.move.from.id
+      var to: Int = aimove.move.to.id
+      printAIMove(didMove, from, to)
+      moveShips(findPlanetbyID(planets, from), findPlanetbyID(planets, to), AI()){planetschangable}
+      
+      // updating the game
+      updatePlanets(planets){planetschangable}
+      updateGamestate(planets){gamesate}
+      applyWinCon(state){gamesate}
+    }
+
+    if(isGameOverscreen(state.screen)){
+      var hasPlayerWon: Bool = hasPlayerWon(state.screen)
+      endScreen(hasPlayerWon)
+      var input: String = getInput()
+      input match{
+        case _ => gamesate.changeScreen(Start())
+      }
+    }
+  }
+}
+
+//------------------------------- testing
 def gameloop() : Unit = {
   var state: GameState = initialGameState()
   // showing initial game state
