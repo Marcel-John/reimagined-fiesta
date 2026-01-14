@@ -123,8 +123,8 @@ def prompt(): Unit ={
 // print für game state
 def ownerName(o: Owner): String =
   o match {
-    case Player()  => "Player"
-    case AI()      => "AI"
+    case Player()  => "Player "
+    case AI()      => "AI     "
     case Neutral() => "Neutral"
   }
 
