@@ -73,6 +73,9 @@ def gamesate = new UpdateGamestate{
     ()
   }
   def getGameState() = {state}
+  def newGameState(g: GameState) ={
+    state = g
+  }
 }
 
 // actual loop
@@ -112,7 +115,7 @@ def gamesate = new UpdateGamestate{
         }
       var p: Planet = findPlanetbyID(planets, inputInt)
       if(p.id != -1){
-        if(state.selected == -1){
+        if(state.selected == -1 || state.selected == inputInt){
           gamesate.cahngeSelected(inputInt)
         }else{
           moveShips(findPlanetbyID(planets, state.selected), findPlanetbyID(planets, inputInt), Player()){planetschangable}
@@ -140,7 +143,7 @@ def gamesate = new UpdateGamestate{
       endScreen(hasPlayerWon)
       var input: String = getInput()
       input match{
-        case _ => gamesate.changeScreen(Start())
+        case _ => gamesate.newGameState(initialGameState())
       }
     }
   }
@@ -206,6 +209,9 @@ def gamesate = new UpdateGamestate{
     ()
   }
   def getGameState() = {state}
+  def newGameState(g: GameState) ={
+    state = g
+  }
 }
 
 moveShips(findPlanetbyID(planets, 0), findPlanetbyID(planets, 1), Player()){planetschangable}

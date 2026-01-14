@@ -57,6 +57,7 @@ def scoreMove(move: AIMove): Int = {
   if(aiShipstarget < playerShips){score = score + loseBattel}
   if(aiShipsfrom < borderweakPlanet){score = score + weakOwnPlanet}
   if(aiShipstarget < playerShips && isOwnedByAI(move.to)){score = score + deffendPlanet}
+  if(move.from.id == move.to.id){score = -100}
 
   // maybe some random bonus????
   
