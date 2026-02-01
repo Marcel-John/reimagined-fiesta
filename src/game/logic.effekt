@@ -33,23 +33,6 @@ def initialGameState(): GameState = {
   selected = -1)
 }
 
-/*
-def changePlanets(planets: List[Planet], updatedPlanet: Planet): Unit ={
-  if(updatedPlanet.id > -1){return ()}
-  var index = 0
-  var target = 0
-  planets.foreach{x =>
-  if(x.id == updatedPlanet.id){
-    target = index
-  }
-  index = index + 1
-  }
-  planets.replace(target, updatedPlanet)
-  println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-  println(target)
-  printAllPlanets(planets)
-  ()
-}*/
 
 def findPlanetbyID(planets: List[Planet], id: Int): Planet = {
   var result: Planet = Planettest
@@ -60,35 +43,6 @@ def findPlanetbyID(planets: List[Planet], id: Int): Planet = {
   }
   result
 }
-/*
-def changeShipsOfPlanet(planets: List[Planet], planet: Planet, shipsPlayernew: Int,
-                  shipsAInew:Int): Unit ={
-  val newPlanet: Planet = Planet(id=planet.id, x=planet.x,
-  y=planet.y, radius=planet.radius, shipsPlayer=shipsPlayernew,
-  shipsAI=shipsAInew, owner=planet.owner)
-  changePlanets(planets, newPlanet)
-}*/
-
-/*
-def moveShips(planets: List[Planet], from: Planet, to: Planet, actor: Owner): Unit = {
-  actor match {
-    case Player() => {
-      val shipsToMove: Int = calculateHalfOfShips(from.shipsPlayer)
-      val shipsPlayerfrom = from.shipsPlayer - shipsToMove
-      val shipsPlayerto = to.shipsPlayer + shipsToMove
-      changeShipsOfPlanet(planets, from, shipsPlayerfrom, from.shipsAI)
-      changeShipsOfPlanet(planets, to, shipsPlayerto, to.shipsAI)
-    }
-    case AI() => {
-      val shipsToMove: Int = calculateHalfOfShips(from.shipsAI)
-      val shipsAIfrom = from.shipsAI - shipsToMove
-      val shipsAIto = to.shipsAI + shipsToMove
-      changeShipsOfPlanet(planets, from, from.shipsPlayer, shipsAIfrom)
-      changeShipsOfPlanet(planets, to, to.shipsPlayer, shipsAIto)
-    }
-    case Neutral() => doNothing()
-  }
-}*/
 
 def calculateHalfOfShips(ships: Int): Int = {
   var result = 0
