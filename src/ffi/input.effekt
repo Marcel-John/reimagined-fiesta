@@ -1,5 +1,8 @@
 module src/ffi/input
-
+import io
+import io/time
+import io/promise
+import io/signal
 import io/console
 
 effect ask(): String
@@ -11,4 +14,78 @@ def getInput(): String = console{
     input = do ask()
   }with ask{resume(do readLine())}
   input
+}
+
+extern type ReadlineHandle
+
+extern jsNode """
+function createReadline$impl() {
+  const readline = require('node:readline').createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  return { rl: readline, cancelled: false };
+}
+function readlineQuestion$impl(handle, callback) {
+  handle.rl.question('', (answer) => {
+    if (!handle.cancelled) {
+      handle.rl.close();
+      callback(answer);
+    }
+  });
+}
+function cancelReadline$impl(handle) {
+  if (!handle.cancelled) {
+    handle.cancelled = true;
+    handle.rl.close();
+  }
+}
+"""
+
+extern def createReadline() at io: ReadlineHandle =
+  jsNode "createReadline$impl()"
+
+extern def readlineQuestion(handle: ReadlineHandle) at async: String =
+  jsNode "$effekt.capture(k => readlineQuestion$impl(${handle}, k))"
+
+extern def cancelReadline(handle: ReadlineHandle) at io: Unit =
+  jsNode "cancelReadline$impl(${handle})"
+
+def withReadline[R] { body: ReadlineHandle => R }: R = {
+  val handle = createReadline()
+  val result = body(handle)
+  cancelReadline(handle)
+  result
+}
+
+def race[A](left: Promise[A], right: Promise[A]): Promise[A] = {
+  val winner = ref(true)
+  val result = promise::make()
+  spawn(box {
+    val value = left.await
+    if (winner.get) {
+      winner.set(false)
+      result.resolve(value)
+    }
+  })
+  spawn(box {
+    val value = right.await
+    if (winner.get) {
+      winner.set(false)
+      result.resolve(value)
+    }
+  })
+  result
+}
+
+def readlnWithTimeout(timeoutMs: Int): Option[String] = withReadline { handle =>
+  race(
+    promise(box { sleep(timeoutMs); None() }),
+    promise(box { Some(readlineQuestion(handle)) })
+  ).await
+}
+
+def getInputWithTimeout(): String = {
+  val input = readlnWithTimeout(2000)
+  input.getOrElse { "no input" }
 }
