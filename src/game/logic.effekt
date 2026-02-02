@@ -178,4 +178,17 @@ def isOwnedByAI(p: Planet): Bool = {
   result
 }
 
+def isOwnedByNeutral(p: Planet): Bool = {
+  val owner : Owner = p.owner
+  var result : Bool = false
+
+  owner match {
+    case Player() =>{result = false}
+    case AI() =>{result = false}
+    case Neutral() =>{result = true}
+  }
+
+  result
+}
+
 def doNothing(): Unit = {}

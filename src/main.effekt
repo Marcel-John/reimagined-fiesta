@@ -146,7 +146,7 @@ try{
       
 
       // AI turn
-      var aimove:AIMovedecision = makeMoveDessision(state)
+      var aimove:AIMovedecision = makeMoveDessision(gamesate.getGameState())
       var didMove: Bool = aimove.isturnUsed
       var from: Int = aimove.move.from.id
       var to: Int = aimove.move.to.id

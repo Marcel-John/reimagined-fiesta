@@ -2,11 +2,11 @@ module src/game/ai
 
 import src/game/state
 import src/game/logic
-
+/*
 record AIView (
   owndPlanets: List[Planet],
   playerPlanets: List[Planet]
-)
+)*/
 
 record AIMove (
   from: Planet,
@@ -19,19 +19,19 @@ record AIMovedecision(
 )
 
 // Heuristic for AI
-val takePlanet: Int = 100
-val loseBattel: Int = -50
-val weakOwnPlanet: Int = -70
-val losefrom: Int = -200
-val deffendPlanet: Int = 100
-
+val takePlanet      = 120
+val loseBattel      = -100
+val weakOwnPlanet   = -80
+val losefrom        = -150
+val deffendPlanet   = 110
+/*
 def buldAIView(g: GameState): AIView = {
   
   val aiPlanets: List[Planet] = filter(g.planets){p=>isOwnedByAI(p)}
   val playerPlanets: List[Planet] = filter(g.planets){p=>isOwnedByPlayer(p)}
   val result = AIView(aiPlanets, playerPlanets)
   result
-}
+}*/
 
 def allAIMoves(allPlanets: List[Planet]): List[AIMove] = {
   var result:List[AIMove] = []
@@ -45,22 +45,45 @@ def allAIMoves(allPlanets: List[Planet]): List[AIMove] = {
 }
 
 def scoreMove(move: AIMove): Int = {
-  val aiShipsfrom: Int = calculateHalfOfShips(move.from.shipsAI)
-  val playerShipsfrom: Int = move.from.shipsPlayer
-  val aiShipstarget: Int = move.to.shipsAI + aiShipsfrom 
-  val playerShips: Int = move.to.shipsPlayer
-  val borderweakPlanet: Int = 10
+  val aiShipsfrom = if (isOwnedByAI(move.from)) calculateHalfOfShips(move.from.shipsAI) else 0
+  val aiShipstarget = move.to.shipsAI + aiShipsfrom 
+  val playerShips = move.to.shipsPlayer
+  val diff = aiShipstarget - playerShips
 
-  var score: Int = 0
-  if(aiShipstarget > playerShips){score = score + takePlanet}
-  if(aiShipsfrom < playerShipsfrom){score = score + losefrom}
-  if(aiShipstarget < playerShips){score = score + loseBattel}
-  if(aiShipsfrom < borderweakPlanet){score = score + weakOwnPlanet}
-  if(aiShipstarget < playerShips && isOwnedByAI(move.to)){score = score + deffendPlanet}
-  if(move.from.id == move.to.id){score = -100}
+  var score = 0
 
-  // maybe some random bonus????
-  
+  // Planet-Effekte
+  if (aiShipstarget + aiShipsfrom > playerShips) score = score + takePlanet + diff
+  if (aiShipstarget + aiShipsfrom < playerShips) score = score + loseBattel + diff
+  //if (isOwnedByAI(move.from) && aiShipsfrom < 10) score = score + weakOwnPlanet
+  if (isOwnedByAI(move.to) && aiShipstarget >= playerShips) score = score + deffendPlanet
+
+  // Player / Neutral-Bonus
+  val targetBonus =
+    if (isOwnedByPlayer(move.to) && diff >= 0) 120 + diff
+    else if (isOwnedByNeutral(move.to) && aiShipstarget > 0) 100 + diff
+    else 0
+
+  score = score + targetBonus
+
+  if (not(isOwnedByAI(move.from)) || aiShipsfrom <= 0) score = -100000
+  if (move.from.id == move.to.id) score = -100
+
+  score
+  }
+
+def simplescoreMove(move: AIMove, p: List[Planet]) : Int = {
+  var score = 0
+  val shipsTotalAi = shipsTotalAi(p)
+  val shipsTotalPlayer = shipsTotalPlayer(p)
+  score = score + (shipsTotalPlayer - shipsTotalAi)
+  if(hasMostShips(move.from, p, AI())){score = score + 50}
+  if(isOwnedByNeutral(move.to)){score = score + 100}
+  if(isOwnedByAI(move.from)){score = score + 50}
+  if(isOwnedByPlayer(move.to)){score = score + 70}
+  if(isOwnedByAI(move.to) && move.to.shipsPlayer > 10){score = score + 200}
+  if(isSamePlanet(move.from, move.to)){score = -1000}
+  if(move.from.shipsAI < 10){score = score - 250}
   score
 }
 
@@ -71,12 +94,12 @@ def makeMoveDessision(g: GameState): AIMovedecision = {
   var bestMove: AIMove = AIMove(defaultPlanet, defaultPlanet)
 
   allMoves.foreach{m=>
-  var score: Int = scoreMove(m)
+  var score: Int = simplescoreMove(m, planets)
   if(score > bestscore){
     bestMove = m
     bestscore = score
     }
   }
-  AIMovedecision(bestMove, bestscore > 0)
+  AIMovedecision(bestMove, bestscore > -100)
 }
 

@@ -31,6 +31,45 @@ record GameState (
   selected: Int // Planet-ID negative if none selectet
 )
 
+def shipsTotalPlayer(p: List[Planet]): Int = {
+  var numShips: Int = 0
+  p.foreach{x=>
+  numShips = numShips + x.shipsPlayer
+  }
+  numShips
+}
+
+def shipsTotalAi(p: List[Planet]): Int = {
+  var numShips: Int = 0
+  p.foreach{x=>
+  numShips = numShips + x.shipsAI
+  }
+  numShips
+}
+
+def isSamePlanet(p1: Planet, p2: Planet): Bool = {
+  p1.id == p2.id
+}
+
+def hasMostShips(p: Planet, planets: List[Planet], o: Owner): Bool = {
+  var shipsPlanet = 0
+  var hasMostShips = true
+  o match{
+  case Player() =>{shipsPlanet = p.shipsPlayer}
+  case AI() =>{shipsPlanet = p.shipsAI}
+  case Neutral() =>{shipsPlanet = 0}
+  }
+
+  planets.foreach{x=>
+  x.owner match{
+    case Player() =>{if(shipsPlanet < x.shipsPlayer){hasMostShips = false}}
+    case AI() =>{if(shipsPlanet < x.shipsAI){hasMostShips = false}}
+    case Neutral() =>{hasMostShips = false}
+  }
+  }
+  hasMostShips
+}
+
 // printing stuff for controlling 
 def printGameState(gameState: GameState): Unit = {
   printScreeen(gameState.screen)
