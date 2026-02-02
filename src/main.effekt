@@ -13,14 +13,33 @@ def main(): Unit = {
 //gameloop()
 // 
 //console version
-consolegameloop()
+mainMenu()
+//consolegameloop()
 
 println(helloWorld())
 }
 
-def consolegameloop() : Unit = {
+def mainMenu() : Unit = {
+  try{
+    while(true){
+      printMainMenu()
+      var input = getInput()
+      input match{
+        case "q" => do break(2)
+        case "n" => consolegameloop()
+        case _ => doNothing()
+      }
+    }
+  }with Multibreak {
+    def break(n) = {
+      val numberOfBreaks: Int = n - 1
+    }
+  }
+}
+
+
+def consolegameloop() : Unit/Multibreak = {
   // some inital states
-  var isGameRunning: Bool = true
   var state: GameState = initialGameState()
   var planets:List[Planet] = state.planets
 
@@ -36,7 +55,6 @@ def planetschangable = new UpdatePlanets{
   }
   index = index + 1
   }
-  // this is dumb why not impus as pointers why
   if(target > -1){
   planets = planets.replace(target, planet)}
   // for unit
@@ -72,6 +90,7 @@ def gamesate = new UpdateGamestate{
     state = newstate
     ()
   }
+  def getScreen() = {state.screen}
   def getGameState() = {state}
   def newGameState(g: GameState) ={
     state = g
@@ -79,14 +98,16 @@ def gamesate = new UpdateGamestate{
 }
 
 // actual loop
-  while(isGameRunning){
+try{
+  while(true){
     // managing the start screen
-    if(isStartscreen(state.screen)){
+    if(isStartscreen(gamesate.getScreen())){
       printStartscreen()
       var input = getInput()
       input match{
         case "s" => gamesate.changeScreen(Game())
-        case "q" => isGameRunning = false
+        case "q" => do break(2)
+        case "r" => do break(1)
         case _ => ()
       }
     }
@@ -100,7 +121,7 @@ def gamesate = new UpdateGamestate{
       var inputInt: Int = -1
       input match {
         case "" => gamesate.cahngeSelected(-1)
-        case "q" => isGameRunning = false
+        case "q" => do break(2)
         case "0" => inputInt = 0
         case "1" => inputInt = 1
         case "2" => inputInt = 2
@@ -147,7 +168,19 @@ def gamesate = new UpdateGamestate{
       }
     }
   }
+  }with Multibreak {
+    def break(n) = {
+      val numberOfBreaks: Int = n - 1
+      if(numberOfBreaks > 0){
+        do break(n)
+      }
+    }
+  }
 }
+
+
+
+
 
 //------------------------------- testing
 def gameloop() : Unit = {
@@ -190,7 +223,7 @@ def gamesate = new UpdateGamestate{
     state = newstate
     ()
   }
-
+def getScreen() = {state.screen}
   def cahngeSelected(s: Int) = {
     val newstate = GameState(
       screen = state.screen,

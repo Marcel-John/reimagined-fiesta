@@ -10,6 +10,11 @@ interface UpdateGamestate {
   def changePlanets(planets:List[Planet]): Unit
   def cahngeSelected(selected: Int): Unit
   def changeScreen(newScreen: Screen): Unit
+  def getScreen(): Screen
   def getGameState(): GameState
   def newGameState(g: GameState): Unit
+}
+
+interface Multibreak {
+  def break(n: Int): Unit
 }

@@ -102,10 +102,21 @@ def hasPlayerWon(s: Screen): Bool = {
 
 def printStartscreen(): Unit = {
   line()
-  center("PLANET CONQUEST")
+  center("PLANET CONQUEST normal game")
   line()
   empty()
   println("s) start")
+  println("r) return to main menu")
+  println("q) quit")
+  prompt()
+}
+
+def printMainMenu(): Unit = {
+  line()
+  center("PLANET CONQUEST")
+  line()
+  empty()
+  println("n) normal game")
   println("q) quit")
   prompt()
 }
