@@ -16,7 +16,7 @@ type Owner {
 }
 
 record Planet (
-  id: Int,
+  id: String,
   x: Int,
   y: Int,
   radius: Int,
@@ -28,7 +28,7 @@ record Planet (
 record GameState (
   screen: Screen,
   planets: List[Planet],
-  selected: Int // Planet-ID negative if none selectet
+  selected: String // Planet-ID negative if none selectet
 )
 
 def shipsTotalPlayer(p: List[Planet]): Int = {
@@ -84,8 +84,8 @@ case EndWin() => println("EndWin")
 case EndLose() => println("EndLose")
 }
 
-def printSelectet(selected: Int): Unit = {
-  println("selected: " ++ show(selected))
+def printSelectet(selected: String): Unit = {
+  println("selected: " ++ selected)
 }
 
 def printAllPlanets(planets : List[Planet]): Unit ={
@@ -97,7 +97,7 @@ printPlanet(x)
 }
 
 def printPlanet(planet: Planet): Unit = {
-  println("planetID: " ++ show(planet.id))
+  println("planetID: " ++ planet.id)
   println("planetx: " ++ show(planet.x))
   println("planety: " ++ show(planet.y))
   println("planetradius: " ++ show(planet.radius))
@@ -179,19 +179,19 @@ def ownerName(o: Owner): String =
   }
 
 
-def planetRow(p: Planet, selected: Int): String ={
+def planetRow(p: Planet, selected: String): String ={
   var mark = " "
   if(selected == p.id){
     mark = ">"
   }
 // pad für besseres formating
   mark ++
-  " " ++ show(p.id) ++
+  " " ++ p.id ++
   " | " ++ ownerName(p.owner) ++
   " | " ++ show(p.shipsPlayer) ++
   " | " ++ show(p.shipsAI)}
 
-def drawPlanets(planets: List[Planet], selected: Int): Unit ={
+def drawPlanets(planets: List[Planet], selected: String): Unit ={
   println(" ID | Owner   | Player |  AI")
   println("----+---------+--------+------")
 
@@ -204,7 +204,7 @@ def drawGameState(state: GameState, p: Owner): Unit ={
   println(
     " TURN: " ++
     (if(isPlayer(p)){"Player"}  else {"AI"}) ++
-    "        Selected: " ++ if(state.selected == -1){"None"}else{show(state.selected)}
+    "        Selected: " ++ if(state.selected == ""){"None"}else{state.selected}
   )
   println("=====================================================")
   println("")
@@ -220,11 +220,11 @@ def drawGameState(state: GameState, p: Owner): Unit ={
     case _ => false
   }
 
-  def printAIMove(aiDidMove: Bool, from: Int, to: Int) =
+  def printAIMove(aiDidMove: Bool, from: String, to: String) =
   if (not(aiDidMove)) {
     println("AI: holds position.")
   } else {
-    println("AI: moves ships from Planet " ++ show(from) ++ " to Planet " ++ show(to))
+    println("AI: moves ships from Planet " ++ from ++ " to Planet " ++ to)
   }
 
 

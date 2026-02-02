@@ -2,11 +2,6 @@ module src/game/ai
 
 import src/game/state
 import src/game/logic
-/*
-record AIView (
-  owndPlanets: List[Planet],
-  playerPlanets: List[Planet]
-)*/
 
 record AIMove (
   from: Planet,
@@ -18,21 +13,6 @@ record AIMovedecision(
   isturnUsed: Bool
 )
 
-// Heuristic for AI
-val takePlanet      = 120
-val loseBattel      = -100
-val weakOwnPlanet   = -80
-val losefrom        = -150
-val deffendPlanet   = 110
-/*
-def buldAIView(g: GameState): AIView = {
-  
-  val aiPlanets: List[Planet] = filter(g.planets){p=>isOwnedByAI(p)}
-  val playerPlanets: List[Planet] = filter(g.planets){p=>isOwnedByPlayer(p)}
-  val result = AIView(aiPlanets, playerPlanets)
-  result
-}*/
-
 def allAIMoves(allPlanets: List[Planet]): List[AIMove] = {
   var result:List[AIMove] = []
 
@@ -43,6 +23,14 @@ def allAIMoves(allPlanets: List[Planet]): List[AIMove] = {
   }
   result
 }
+/*
+old version
+// Heuristic for AI
+val takePlanet      = 120
+val loseBattel      = -100
+val weakOwnPlanet   = -80
+val losefrom        = -150
+val deffendPlanet   = 110
 
 def scoreMove(move: AIMove): Int = {
   val aiShipsfrom = if (isOwnedByAI(move.from)) calculateHalfOfShips(move.from.shipsAI) else 0
@@ -70,7 +58,7 @@ def scoreMove(move: AIMove): Int = {
   if (move.from.id == move.to.id) score = -100
 
   score
-  }
+  }*/
 
 def simplescoreMove(move: AIMove, p: List[Planet]) : Int = {
   var score = 0

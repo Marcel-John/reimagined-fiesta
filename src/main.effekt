@@ -46,7 +46,7 @@ def consolegameloop() : Unit/Multibreak = {
   // updateting planets using effects
 def planetschangable = new UpdatePlanets{
   def updatePlanet(planet: Planet) = {
-    if(planet.id > -1){return ()}
+    if(planet.id == ""){return ()}
   var index = 0
   var target = -1
   planets.foreach{x =>
@@ -73,7 +73,7 @@ def gamesate = new UpdateGamestate{
     ()
   }
 
-  def cahngeSelected(s: Int) = {
+  def cahngeSelected(s: String) = {
     val newstate = GameState(
       screen = state.screen,
       planets = state.planets,
@@ -118,29 +118,28 @@ try{
       // Player turn
       drawGameState(gamesate.getGameState(), Player())
       var input: String = getInput()
-      var inputInt: Int = -1
       input match {
-        case "" => gamesate.cahngeSelected(-1)
+        case "" => gamesate.cahngeSelected("")
         case "q" => do break(2)
-        case "0" => inputInt = 0
-        case "1" => inputInt = 1
-        case "2" => inputInt = 2
-        case "3" => inputInt = 3
-        case "4" => inputInt = 4
-        case "5" => inputInt = 5
-        case "6" => inputInt = 6
-        case "7" => inputInt = 7
-        case "8" => inputInt = 8
-        case "9" => inputInt = 9
+        //case "0" => inputInt = 0
+        //case "1" => inputInt = 1
+        //case "2" => inputInt = 2
+        //case "3" => inputInt = 3
+        //case "4" => inputInt = 4
+        //case "5" => inputInt = 5
+        //case "6" => inputInt = 6
+        //case "7" => inputInt = 7
+        //case "8" => inputInt = 8
+        //case "9" => inputInt = 9
         case _ => ()
         }
-      var p: Planet = findPlanetbyID(planets, inputInt)
-      if(p.id != -1){
-        if(state.selected == -1 || state.selected == inputInt){
-          gamesate.cahngeSelected(inputInt)
+      var p: Planet = findPlanetbyID(planets, input)
+      if(p.id != "-1"){
+        if(state.selected == "" || state.selected == input){
+          gamesate.cahngeSelected(input)
         }else{
-          moveShips(findPlanetbyID(planets, state.selected), findPlanetbyID(planets, inputInt), Player()){planetschangable}
-          gamesate.cahngeSelected(-1)
+          moveShips(findPlanetbyID(planets, state.selected), findPlanetbyID(planets, input), Player()){planetschangable}
+          gamesate.cahngeSelected("")
         }
       }
       
@@ -148,8 +147,8 @@ try{
       // AI turn
       var aimove:AIMovedecision = makeMoveDessision(gamesate.getGameState())
       var didMove: Bool = aimove.isturnUsed
-      var from: Int = aimove.move.from.id
-      var to: Int = aimove.move.to.id
+      var from: String = aimove.move.from.id
+      var to: String = aimove.move.to.id
       printAIMove(didMove, from, to)
       moveShips(findPlanetbyID(planets, from), findPlanetbyID(planets, to), AI()){planetschangable}
       
@@ -183,6 +182,7 @@ try{
 
 
 //------------------------------- testing
+/*
 def gameloop() : Unit = {
   var state: GameState = initialGameState()
   // showing initial game state
@@ -270,7 +270,7 @@ applyWinCon(state){gamesate}
 //printAllPlanets(planets)
 //println("-----------------------------------------------")
 printGameState(state)
-}
+}*/
 
 
 // Helper functions-------------------------------------

@@ -21,20 +21,20 @@ val battelstrngthPlayer = spawnAI + 1
 val battelstrngthAI = spawnPlayer + 1
 val battelstrngthNeutral = 0
 
-val Planettest: Planet= Planet(id=-1, x=0, y=0, radius=0, shipsPlayer=0, shipsAI=0, owner=Neutral())
-val Planet0: Planet= Planet(id=0, x=0, y=0, radius=100, shipsPlayer=49, shipsAI=0, owner=Player())
-val Planet1: Planet= Planet(id=1, x=100, y=100, radius=100, shipsPlayer=0, shipsAI=100, owner=AI())
-val freeforAI: Planet= Planet(id=2, x=100, y=100, radius=100, shipsPlayer=0, shipsAI=0, owner=Neutral())
-val defaultPlanet: Planet = Planet(id=-1, x=0, y=0, radius=0, shipsPlayer=0, shipsAI=0, owner=Neutral())
+val Planettest: Planet= Planet(id="-1", x=0, y=0, radius=0, shipsPlayer=0, shipsAI=0, owner=Neutral())
+val Planet0: Planet= Planet(id="0", x=0, y=0, radius=100, shipsPlayer=49, shipsAI=0, owner=Player())
+val Planet1: Planet= Planet(id="1", x=100, y=100, radius=100, shipsPlayer=0, shipsAI=100, owner=AI())
+val freeforAI: Planet= Planet(id="2", x=100, y=100, radius=100, shipsPlayer=0, shipsAI=0, owner=Neutral())
+val defaultPlanet: Planet = Planet(id="-1", x=0, y=0, radius=0, shipsPlayer=0, shipsAI=0, owner=Neutral())
 
 def initialGameState(): GameState = {
   GameState(screen = Start(),
   planets = [Planet0, Planet1, freeforAI],
-  selected = -1)
+  selected = "")
 }
 
 
-def findPlanetbyID(planets: List[Planet], id: Int): Planet = {
+def findPlanetbyID(planets: List[Planet], id: String): Planet = {
   var result: Planet = Planettest
   planets.foreach{x=>
   if(x.id == id){
