@@ -86,6 +86,11 @@ def readlnWithTimeout(timeoutMs: Int): Option[String] = withReadline { handle =>
 }
 
 def getInputWithTimeout(): String = {
-  val input = readlnWithTimeout(1000)
+  val input = readlnWithTimeout(2000)
   input.getOrElse { "no input" }
 }
+
+extern def randomInt(max: Int): Int =
+  jsNode """
+    return Math.floor(Math.random() * ${max});
+  """

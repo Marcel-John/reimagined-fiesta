@@ -156,6 +156,8 @@ def printMainMenu(): Unit = {
   line()
   empty()
   println("n) normal game")
+  println("a) ai game")
+  println("p) PVP game")
   println("q) quit")
   prompt()
 }
@@ -231,7 +233,8 @@ def drawGameState(state: GameState, p: Owner): Unit ={
 
   def endScreen(playerWon: Bool) ={
   println("=====================================================")
-  println("                      GAME OVER                     ")
+  if(playerWon){println("                      YOU WIN                     ")}else{
+  println("                      GAME OVER                     ")}
   println("=====================================================")
   println("")
 
@@ -258,3 +261,57 @@ def drawGameState(state: GameState, p: Owner): Unit ={
   println("  q  - quit to main menu")
   println("-----------------------------------------------------")
 }
+
+def ownerNamepvp(o: Owner): String =
+  o match {
+    case Player()  => "Player1"
+    case AI()      => "Player2"
+    case Neutral() => "Neutral"
+  }
+
+def planetRowpvp(p: Planet, selected: String): String = {
+  var mark = " "
+  if (selected == p.id) {
+    mark = ">"
+  }
+
+  mark ++
+  " " ++ show(p.id) ++
+  " | " ++ ownerNamepvp(p.owner) ++
+  " | " ++ show(p.shipsPlayer) ++
+  " | " ++ show(p.shipsAI)
+}
+
+
+def drawGameStatepvp(state: GameState, p: Owner): Unit = {
+  println("=====================================================")
+  println(
+    " TURN: " ++
+    (p match {
+      case Player() => "Player1"
+      case AI()     => "Player2"
+      case _        => "?"
+    }) ++
+    "        Selected: " ++
+    if (state.selected == "") "None" else state.selected
+  )
+  println("=====================================================")
+  println("")
+
+  drawPlanetspvp(state.planets, state.selected)
+
+  println("")
+  println("Commands:")
+  println("  to select type the <id>")
+  println("  to undo select type nothing")
+  println("  return to main menu type r")
+  println("  to end the game type q")
+}
+
+def drawPlanetspvp(planets: List[Planet], selected: String): Unit ={
+  println(" ID | Owner   | Player |  Player2")
+  println("----+---------+--------+------")
+
+  planets.foreach { p =>
+    println(planetRowpvp(p, selected))
+  }}

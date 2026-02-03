@@ -28,6 +28,7 @@ def mainMenu() : Unit = {
         case "q" => do break(2)
         case "n" => consolegameloop()
         case "a" => aiVsAi()
+        case "p" => pVP()
         case _ => doNothing()
       }
     }
@@ -147,6 +148,158 @@ try{
       var to: String = aimove.move.to.id
       printAIMove(didMove, from, to)
       moveShips(findPlanetbyID(planets, from), findPlanetbyID(planets, to), AI()){planetschangable}
+      
+      // updating the game
+      updatePlanets(planets){planetschangable}
+      updateGamestate(planets){gamesate}
+      applyWinCon(state){gamesate}
+    }
+
+    if(isGameOverscreen(gamesate.getScreen())){
+      var hasPlayerWon: Bool = hasPlayerWon(gamesate.getScreen())
+      endScreen(hasPlayerWon)
+      var input: String = getInput()
+      input match{
+        case _ => {
+          gamesate.newGameState(initialGameState())
+          do break(1)
+        }
+      }
+    }
+  }
+  }with Multibreak {
+    def break(n) = {
+      val numberOfBreaks: Int = n - 1
+      if(numberOfBreaks > 0){
+        do break(n)
+      }
+    }
+  }
+}
+
+def pVP() : Unit/Multibreak = {
+  // some inital states
+  var state: GameState = initialGameState()
+  var planets:List[Planet] = state.planets
+  var player1Selected: String = "" 
+  var player2Selected: String = "" 
+
+  // updateting planets using effects
+def planetschangable = new UpdatePlanets{
+  def updatePlanet(planet: Planet) = {
+    if(planet.id == ""){return ()}
+  var index = 0
+  var target = -1
+  planets.foreach{x =>
+  if(x.id == planet.id){
+    target = index
+  }
+  index = index + 1
+  }
+  if(target > -1){
+  planets = planets.replace(target, planet)}
+  // for unit
+  ()
+  }
+}
+
+// updating gamestate using effects
+def gamesate = new UpdateGamestate{
+  def changePlanets(p:List[Planet]) = {
+    val newstate = GameState(
+      screen = state.screen,
+      planets = p,
+      selected = state.selected)
+    state = newstate
+    ()
+  }
+
+  def cahngeSelected(s: String) = {
+    val newstate = GameState(
+      screen = state.screen,
+      planets = state.planets,
+      selected = s)
+    state = newstate
+    ()
+  }
+
+  def changeScreen(newScreen: Screen) = {
+    val newstate = GameState(
+      screen = newScreen,
+      planets = state.planets,
+      selected = state.selected)
+    state = newstate
+    ()
+  }
+  def getScreen() = {state.screen}
+  def getGameState() = {state}
+  def newGameState(g: GameState) ={
+    state = g
+  }
+  def getPlanests() = {state.planets}
+  def getSelected() = {state.selected}
+
+}
+
+// actual loop
+try{
+  while(true){
+    // managing the start screen
+    if(isStartscreen(gamesate.getScreen())){
+      printStartscreen("PVP game")
+      var input = getInput()
+      input match{
+        case "s" => gamesate.changeScreen(Game())
+        case "q" => do break(2)
+        case "r" => do break(1)
+        case _ => ()
+      }
+    }
+
+    // Game Loop
+    if(isGamescreen(gamesate.getScreen())){
+
+      // Player turn
+      gamesate.cahngeSelected(player1Selected)
+      drawGameStatepvp(gamesate.getGameState(), Player())
+      var input: String = getInputWithTimeout()
+      input match {
+        case "" => gamesate.cahngeSelected("")
+        case "q" => do break(2)
+        case "r" => do break(1)
+        case _ => ()
+        }
+      var p: Planet = findPlanetbyID(planets, input)
+      if(p.id != "-1"){
+        if(gamesate.getSelected() == "" || gamesate.getSelected() == input){
+          gamesate.cahngeSelected(input)
+        }else{
+          moveShips(findPlanetbyID(planets, gamesate.getSelected()), findPlanetbyID(planets, input), Player()){planetschangable}
+          gamesate.cahngeSelected("")
+        }
+      }
+      player1Selected = gamesate.getSelected()
+
+      // Player 2 turn
+      gamesate.cahngeSelected(player2Selected)
+      drawGameStatepvp(gamesate.getGameState(), AI())
+      input = getInputWithTimeout()
+      input match {
+        case "" => gamesate.cahngeSelected("")
+        case "q" => do break(2)
+        case "r" => do break(1)
+        case _ => ()
+        }
+      p = findPlanetbyID(planets, input)
+      if(p.id != "-1"){
+        if(gamesate.getSelected() == "" || gamesate.getSelected() == input){
+          gamesate.cahngeSelected(input)
+        }else{
+          moveShips(findPlanetbyID(planets, gamesate.getSelected()), findPlanetbyID(planets, input), AI()){planetschangable}
+          gamesate.cahngeSelected("")
+        }
+      }
+      player2Selected = gamesate.getSelected()
       
       // updating the game
       updatePlanets(planets){planetschangable}
