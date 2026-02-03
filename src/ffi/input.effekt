@@ -86,6 +86,6 @@ def readlnWithTimeout(timeoutMs: Int): Option[String] = withReadline { handle =>
 }
 
 def getInputWithTimeout(): String = {
-  val input = readlnWithTimeout(2000)
+  val input = readlnWithTimeout(1000)
   input.getOrElse { "no input" }
 }

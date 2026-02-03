@@ -191,4 +191,11 @@ def isOwnedByNeutral(p: Planet): Bool = {
   result
 }
 
+def isPlayerlogical(o: Owner): Bool = {
+  o match {
+    case Player() => true
+    case _ => false
+  }
+}
+
 def doNothing(): Unit = {}

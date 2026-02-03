@@ -11,7 +11,9 @@ interface UpdateGamestate {
   def cahngeSelected(selected: String): Unit
   def changeScreen(newScreen: Screen): Unit
   def getScreen(): Screen
+  def getPlanests(): List[Planet]
   def getGameState(): GameState
+  def getSelected(): String
   def newGameState(g: GameState): Unit
 }
 

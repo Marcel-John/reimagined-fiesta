@@ -60,29 +60,40 @@ def scoreMove(move: AIMove): Int = {
   score
   }*/
 
-def simplescoreMove(move: AIMove, p: List[Planet]) : Int = {
+def simplescoreMove(move: AIMove, p: List[Planet], o: Owner) : Int = {
   var score = 0
   val shipsTotalAi = shipsTotalAi(p)
   val shipsTotalPlayer = shipsTotalPlayer(p)
+  if(isPlayerlogical(o)){
+    score = score + (shipsTotalAi - shipsTotalPlayer)
+    if(hasMostShips(move.from, p, Player())){score = score + 50}
+    if(isOwnedByNeutral(move.to)){score = score + 100}
+    if(isOwnedByPlayer(move.from)){score = score + 50}
+    if(isOwnedByAI(move.to)){score = score + 70}
+    if(isOwnedByPlayer(move.to) && move.to.shipsPlayer > 10){score = score + 200}
+    if(isSamePlanet(move.from, move.to)){score = -1000}
+    if(move.from.shipsAI < 10){score = score - 250}
+  }else{
   score = score + (shipsTotalPlayer - shipsTotalAi)
-  if(hasMostShips(move.from, p, AI())){score = score + 50}
-  if(isOwnedByNeutral(move.to)){score = score + 100}
-  if(isOwnedByAI(move.from)){score = score + 50}
-  if(isOwnedByPlayer(move.to)){score = score + 70}
-  if(isOwnedByAI(move.to) && move.to.shipsPlayer > 10){score = score + 200}
-  if(isSamePlanet(move.from, move.to)){score = -1000}
-  if(move.from.shipsAI < 10){score = score - 250}
+    if(hasMostShips(move.from, p, AI())){score = score + 50}
+    if(isOwnedByNeutral(move.to)){score = score + 100}
+    if(isOwnedByAI(move.from)){score = score + 50}
+    if(isOwnedByPlayer(move.to)){score = score + 70}
+    if(isOwnedByAI(move.to) && move.to.shipsPlayer > 10){score = score + 200}
+    if(isSamePlanet(move.from, move.to)){score = -1000}
+    if(move.from.shipsAI < 10){score = score - 250}
+  }
   score
 }
 
-def makeMoveDessision(g: GameState): AIMovedecision = {
+def makeMoveDessision(g: GameState, o: Owner): AIMovedecision = {
   val planets: List[Planet] = g.planets
   val allMoves: List[AIMove] = allAIMoves(planets)
   var bestscore: Int = -100000
   var bestMove: AIMove = AIMove(defaultPlanet, defaultPlanet)
 
   allMoves.foreach{m=>
-  var score: Int = simplescoreMove(m, planets)
+  var score: Int = simplescoreMove(m, planets, o)
   if(score > bestscore){
     bestMove = m
     bestscore = score
