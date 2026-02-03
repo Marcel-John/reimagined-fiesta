@@ -23,6 +23,7 @@ def allAIMoves(allPlanets: List[Planet]): List[AIMove] = {
   }
   result
 }
+
 /*
 old version
 // Heuristic for AI

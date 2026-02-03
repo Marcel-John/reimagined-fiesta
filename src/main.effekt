@@ -11,15 +11,16 @@ import src/game/ai
 def main(): Unit = {
   // test loop
 //gameloop()
-// 
+
+
 //console version
 mainMenu()
-//consolegameloop()
 
 println(helloWorld())
 }
 
 def mainMenu() : Unit = {
+  var map: List[Planet] = initialGameState().planets
   try{
     while(true){
       printMainMenu()
@@ -29,6 +30,7 @@ def mainMenu() : Unit = {
         case "n" => consolegameloop()
         case "a" => aiVsAi()
         case "p" => pVP()
+        case "m" => map = mapEditor(map)
         case _ => doNothing()
       }
     }
@@ -39,11 +41,70 @@ def mainMenu() : Unit = {
   }
 }
 
+def mapEditor(map: List[Planet]): List[Planet]/Multibreak = {
+  var result: List[Planet] = map
+  try{
+  while(true){
+    drawMapEditorMenu()
+    var input = getInput()
+      input match{
+        case "q" => do break(2)
+        case "r" => do break(1)
+        case "d" => result = initialGameState().planets
+        case "s" => drawPlanets(result, "")
+        case "e" => {
+          var selected = ""
+          try{
+          while(true){
+            drawMapEditMode(selected)
+            input = getInput()
+            var input = getInput()
+            input match{
+              case "q" => do break(3)
+              case "r" => do break(1)
+              case "+1ai" => {if(selected != ""){result = updateListOfPlanets(result, addShipstoPlanet(findPlanetbyID(result,selected), AI(),1))}}
+              case "+10ai" => {if(selected != ""){result = updateListOfPlanets(result, addShipstoPlanet(findPlanetbyID(result,selected), AI(),10))}}
+              case "-1ai" => {if(selected != ""){result = updateListOfPlanets(result, addShipstoPlanet(findPlanetbyID(result,selected), AI(),-1))}}
+              case "-10ai" => {if(selected != ""){result = updateListOfPlanets(result, addShipstoPlanet(findPlanetbyID(result,selected), AI(),-10))}}
+              case "+1p" => {if(selected != ""){result = updateListOfPlanets(result, addShipstoPlanet(findPlanetbyID(result,selected), Player(),1))}}
+              case "+10p" => {if(selected != ""){result = updateListOfPlanets(result, addShipstoPlanet(findPlanetbyID(result,selected), Player(),10))}}
+              case "-1p" => {if(selected != ""){result = updateListOfPlanets(result, addShipstoPlanet(findPlanetbyID(result,selected), Player(),-1))}}
+              case "-10p" => {if(selected != ""){result = updateListOfPlanets(result, addShipstoPlanet(findPlanetbyID(result,selected), Player(),-10))}}
+              case _ => {
+                var p: Planet = findPlanetbyID(result, input)
+                if(p.id != "-1"){
+                  selected = p.id
+                  println("selected " ++ selected)
+                }
+                }
+            }}
+        }with Multibreak {
+    def break(n) = {
+      val numberOfBreaks: Int = n - 1
+      if(numberOfBreaks > 0){
+        do break(n)
+      }
+    }
+  }}
+        case _ => doNothing()
+      }
+  }
+  }with Multibreak {
+    def break(n) = {
+      val numberOfBreaks: Int = n - 1
+      if(numberOfBreaks > 0){
+        do break(n)
+      }
+    }
+  }
+result
+}
+
 
 def consolegameloop() : Unit/Multibreak = {
   
   // some inital states
-  var state: GameState = initialGameState()
+  var state: GameState = secondmap() //initialGameState()
   var planets:List[Planet] = state.planets
 
   // updateting planets using effects
@@ -123,7 +184,7 @@ try{
 
       // Player turn
       drawGameState(gamesate.getGameState(), Player())
-      var input: String = getInput()
+      var input: String = getInputWithTimeout()
       input match {
         case "" => gamesate.cahngeSelected("")
         case "q" => do break(2)
@@ -176,7 +237,7 @@ try{
     }
   }
 }
-
+//---------------------------------------------------------------------------------------------------------------
 def pVP() : Unit/Multibreak = {
   // some inital states
   var state: GameState = initialGameState()
@@ -328,7 +389,7 @@ try{
     }
   }
 }
-
+//---------------------------------------------------------------------------------------------
 def aiVsAi(): Unit/Multibreak = {
   // some inital states
   var state: GameState = initialGameState()

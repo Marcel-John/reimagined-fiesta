@@ -28,7 +28,7 @@ record Planet (
 record GameState (
   screen: Screen,
   planets: List[Planet],
-  selected: String // Planet-ID negative if none selectet
+  selected: String
 )
 
 def shipsTotalPlayer(p: List[Planet]): Int = {
@@ -69,6 +69,12 @@ def hasMostShips(p: Planet, planets: List[Planet], o: Owner): Bool = {
   }
   hasMostShips
 }
+
+/*
+extern def randomInt(max: Int): Int =
+  jsNode """
+    return Math.floor(Math.random() * ${max});
+  """*/
 
 // printing stuff for controlling 
 def printGameState(gameState: GameState): Unit = {
@@ -158,6 +164,7 @@ def printMainMenu(): Unit = {
   println("n) normal game")
   println("a) ai game")
   println("p) PVP game")
+  println("m) map editor")
   println("q) quit")
   prompt()
 }
@@ -257,7 +264,7 @@ def drawGameState(state: GameState, p: Owner): Unit ={
   println("")
   println("-----------------------------------------------------")
   println("Commands:")
-  println("  r  - restart simulation")
+  println("  r  - return to menu")
   println("  q  - quit to main menu")
   println("-----------------------------------------------------")
 }
@@ -315,3 +322,50 @@ def drawPlanetspvp(planets: List[Planet], selected: String): Unit ={
   planets.foreach { p =>
     println(planetRowpvp(p, selected))
   }}
+
+
+def drawMapEditorMenu(): Unit = {
+  println("=====================================================")
+  println("                  MAP EDITOR MENU")
+  println("=====================================================")
+  println("")
+  println("Commands:")
+  println("  d     - load default map")
+  //println("  rand  - generate random map")
+  println("  e     - enter edit mode")
+  println("  s     - show map")
+  println("")
+  println("  r     - return to main menu")
+  println("  q     - quit game")
+  println("=====================================================")
+}
+
+def drawMapEditMode(selected: String): Unit = {
+  println("=====================================================")
+  println("                  MAP EDIT MODE")
+  println("=====================================================")
+  println(
+    " Selected Planet: " ++
+    (if (selected == "") { "None" } else { selected })
+  )
+  println("=====================================================")
+  println("")
+  println("Selection:")
+  println("  <id>        - select planet by id")
+  println("")
+  println("Modify ships:")
+  println("  +1ai        - add 1 AI ship")
+  println("  +10ai       - add 10 AI ships")
+  println("  -1ai        - remove 1 AI ship")
+  println("  -10ai       - remove 10 AI ships")
+  println("")
+  println("  +1p         - add 1 Player ship")
+  println("  +10p        - add 10 Player ships")
+  println("  -1p         - remove 1 Player ship")
+  println("  -10p        - remove 10 Player ships")
+  println("")
+  println("Navigation:")
+  println("  r           - return to editor menu")
+  println("  q           - quit game")
+  println("=====================================================")
+}

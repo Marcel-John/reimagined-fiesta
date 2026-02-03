@@ -89,8 +89,3 @@ def getInputWithTimeout(): String = {
   val input = readlnWithTimeout(2000)
   input.getOrElse { "no input" }
 }
-
-extern def randomInt(max: Int): Int =
-  jsNode """
-    return Math.floor(Math.random() * ${max});
-  """

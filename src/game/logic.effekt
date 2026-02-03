@@ -33,6 +33,49 @@ def initialGameState(): GameState = {
   selected = "")
 }
 
+def secondmap(): GameState = {
+  GameState(screen = Start(),
+  planets = [Planet0, Planet1, freeforAI, Planet(id="3", x=100, y=100, radius=100, shipsPlayer=0, shipsAI=0, owner=Neutral()), Planet(id="4", x=0, y=0, radius=100, shipsPlayer=49, shipsAI=0, owner=Player())],
+  selected = "")
+}
+/*
+def generateRandomPlanets(): List[Planet] = {
+  val numPlanets = randomInt(7) + 2
+  var counter = 0
+  var result: List[Planet] = []
+  while(counter < numPlanets){
+    val shipsPlayer=randomInt(100)
+    val shipsAI=randomInt(100)
+    val newPlanet:Planet = Planet(show(counter), x=0, y=0, radius=0, shipsPlayer, shipsAI, if(shipsPlayer > shipsAI){Player()}else{AI()})
+    result = result.append([newPlanet])
+  }
+  result
+}*/
+
+def addShipstoPlanet(p:Planet, o: Owner, s: Int): Planet ={
+  var result = p
+  o match{
+    case Player() => {result = Planet(p.id, p.x, p.y, p.radius, addNotNegative(p.shipsPlayer, s), p.shipsAI, p.owner)}
+    case AI() => {result = Planet(p.id, p.x, p.y, p.radius, p.shipsPlayer, addNotNegative(p.shipsAI, s), p.owner)}
+    case Neutral() => {doNothing()}
+  }
+  result
+}
+
+def updateListOfPlanets(l: List[Planet], p: Planet): List[Planet] = {
+  var result = l
+  var index = 0
+  var target = -1
+  l.foreach{x =>
+  if(x.id == p.id){
+    target = index
+  }
+  index = index + 1
+  }
+  if(target > -1){
+  result  = result.replace(target, p)}
+  l
+}
 
 def findPlanetbyID(planets: List[Planet], id: String): Planet = {
   var result: Planet = Planettest
@@ -109,6 +152,12 @@ def subtractionNotNegative(ships: Int, amout: Int): Int = {
     result = 0
   }
 
+  result
+}
+
+def addNotNegative(x: Int, y: Int): Int = {
+  var result = x + y
+  if(result < 0){result = 0}
   result
 }
 

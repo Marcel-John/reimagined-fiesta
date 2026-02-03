@@ -1,3 +1,27 @@
+# Project read me
+- first install effekt
+- run the main.effekt
+- this opens the main menu
+- here you can select the mode you want to play or quit
+- their is a normal mode
+- their is a pvp mode
+- their is ai vs ai mode
+
+# general rules are:
+- player can select any planet
+- when then selecting an other planet half of your ships go to the target
+- when ships of two rivaling factions are on the same planet they battle
+- when their are no ships of the deffending faction on the planet the control swiches
+- once a faction controles no planets they lose the game
+
+# game modes
+- normal is you against the ai
+- ai vs ai is two ais fight each other
+- PvP two players aginst each other
+- each player has 2 seconds to do their turn otherwis the next gets the turn
+
+
+
 # Effekt Template
 
 > [!WARNING]
