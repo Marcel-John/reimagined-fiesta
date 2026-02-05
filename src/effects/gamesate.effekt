@@ -2,6 +2,7 @@ module src/effects/gamesate
 
 import src/game/state
 
+// effects to maintain the game state
 interface UpdatePlanets {
   def updatePlanet(planet: Planet): Unit
 }
@@ -17,6 +18,7 @@ interface UpdateGamestate {
   def newGameState(g: GameState): Unit
 }
 
+// effect to break out of multiple loops
 interface Multibreak {
   def break(n: Int): Unit
 }

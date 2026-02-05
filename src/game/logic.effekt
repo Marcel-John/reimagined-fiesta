@@ -247,4 +247,5 @@ def isPlayerlogical(o: Owner): Bool = {
   }
 }
 
+// helping readabyility
 def doNothing(): Unit = {}

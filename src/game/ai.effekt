@@ -65,6 +65,7 @@ def simplescoreMove(move: AIMove, p: List[Planet], o: Owner) : Int = {
   var score = 0
   val shipsTotalAi = shipsTotalAi(p)
   val shipsTotalPlayer = shipsTotalPlayer(p)
+  // heuristic to evaluate the moves
   if(isPlayerlogical(o)){
     score = score + (shipsTotalAi - shipsTotalPlayer)
     if(hasMostShips(move.from, p, Player())){score = score + 50}

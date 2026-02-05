@@ -5,10 +5,10 @@ import io/promise
 import io/signal
 import io/console
 
+// normal input no time out
 effect ask(): String
 
 def getInput(): String = console{
-  // it is not possible to get a timer at the same time
   var input: String  = ""
   try{
     input = do ask()
@@ -16,6 +16,7 @@ def getInput(): String = console{
   input
 }
 
+// js code for the timer/timeout
 extern type ReadlineHandle
 
 extern jsNode """

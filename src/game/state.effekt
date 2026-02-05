@@ -70,12 +70,6 @@ def hasMostShips(p: Planet, planets: List[Planet], o: Owner): Bool = {
   hasMostShips
 }
 
-/*
-extern def randomInt(max: Int): Int =
-  jsNode """
-    return Math.floor(Math.random() * ${max});
-  """*/
-
 // printing stuff for controlling 
 def printGameState(gameState: GameState): Unit = {
   printScreeen(gameState.screen)

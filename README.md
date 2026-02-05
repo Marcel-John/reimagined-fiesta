@@ -9,7 +9,7 @@ A strategic planet-conquering game developed using the **Effekt** programming la
 1.  **Install Effekt:** Ensure you have the [Effekt language](https://effekt-lang.org/) installed on your system.
 2.  **Clone the Repository:**
     ```bash
-    git clone [https://https://github.com/Marcel-John/reimagined-fiesta.git](https://https://github.com/Marcel-John/reimagined-fiesta.git)
+    git clone [https://https://github.com/Marcel-John/reimagined-fiesta](https://https://github.com/Marcel-John/reimagined-fiesta)
     cd planet-conquest
     ```
 3.  **Run the Game:**
