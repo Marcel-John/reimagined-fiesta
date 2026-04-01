@@ -38,19 +38,6 @@ def secondmap(): GameState = {
   planets = [Planet0, Planet1, freeforAI, Planet(id="3", x=100, y=100, radius=100, shipsPlayer=0, shipsAI=0, owner=Neutral()), Planet(id="4", x=0, y=0, radius=100, shipsPlayer=49, shipsAI=0, owner=Player())],
   selected = "")
 }
-/*
-def generateRandomPlanets(): List[Planet] = {
-  val numPlanets = randomInt(7) + 2
-  var counter = 0
-  var result: List[Planet] = []
-  while(counter < numPlanets){
-    val shipsPlayer=randomInt(100)
-    val shipsAI=randomInt(100)
-    val newPlanet:Planet = Planet(show(counter), x=0, y=0, radius=0, shipsPlayer, shipsAI, if(shipsPlayer > shipsAI){Player()}else{AI()})
-    result = result.append([newPlanet])
-  }
-  result
-}*/
 
 def addShipstoPlanet(p:Planet, o: Owner, s: Int): Planet ={
   var result = p

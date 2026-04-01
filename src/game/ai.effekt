@@ -24,43 +24,6 @@ def allAIMoves(allPlanets: List[Planet]): List[AIMove] = {
   result
 }
 
-/*
-old version
-// Heuristic for AI
-val takePlanet      = 120
-val loseBattel      = -100
-val weakOwnPlanet   = -80
-val losefrom        = -150
-val deffendPlanet   = 110
-
-def scoreMove(move: AIMove): Int = {
-  val aiShipsfrom = if (isOwnedByAI(move.from)) calculateHalfOfShips(move.from.shipsAI) else 0
-  val aiShipstarget = move.to.shipsAI + aiShipsfrom 
-  val playerShips = move.to.shipsPlayer
-  val diff = aiShipstarget - playerShips
-
-  var score = 0
-
-  // Planet-Effekte
-  if (aiShipstarget + aiShipsfrom > playerShips) score = score + takePlanet + diff
-  if (aiShipstarget + aiShipsfrom < playerShips) score = score + loseBattel + diff
-  //if (isOwnedByAI(move.from) && aiShipsfrom < 10) score = score + weakOwnPlanet
-  if (isOwnedByAI(move.to) && aiShipstarget >= playerShips) score = score + deffendPlanet
-
-  // Player / Neutral-Bonus
-  val targetBonus =
-    if (isOwnedByPlayer(move.to) && diff >= 0) 120 + diff
-    else if (isOwnedByNeutral(move.to) && aiShipstarget > 0) 100 + diff
-    else 0
-
-  score = score + targetBonus
-
-  if (not(isOwnedByAI(move.from)) || aiShipsfrom <= 0) score = -100000
-  if (move.from.id == move.to.id) score = -100
-
-  score
-  }*/
-
 def simplescoreMove(move: AIMove, p: List[Planet], o: Owner) : Int = {
   var score = 0
   val shipsTotalAi = shipsTotalAi(p)
