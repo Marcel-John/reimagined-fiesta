@@ -13,6 +13,7 @@ record AIMovedecision(
   isturnUsed: Bool
 )
 
+// getting all possible moves
 def allAIMoves(allPlanets: List[Planet]): List[AIMove] = {
   var result:List[AIMove] = []
 
@@ -24,6 +25,7 @@ def allAIMoves(allPlanets: List[Planet]): List[AIMove] = {
   result
 }
 
+// scoring a given Move
 def simplescoreMove(move: AIMove, p: List[Planet], o: Owner) : Int = {
   var score = 0
   val shipsTotalAi = shipsTotalAi(p)
@@ -51,6 +53,7 @@ def simplescoreMove(move: AIMove, p: List[Planet], o: Owner) : Int = {
   score
 }
 
+// decide on the best move and if the move should be used
 def makeMoveDessision(g: GameState, o: Owner): AIMovedecision = {
   val planets: List[Planet] = g.planets
   val allMoves: List[AIMove] = allAIMoves(planets)

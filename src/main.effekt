@@ -9,14 +9,10 @@ import src/game/ai
 
 
 def main(): Unit = {
-  // test loop
-//gameloop()
-
-
 //console version
-mainMenu()
+  mainMenu()
 
-println(helloWorld())
+  println(helloWorld())
 }
 
 def mainMenu() : Unit = {
@@ -25,7 +21,7 @@ def mainMenu() : Unit = {
     while(true){
       printMainMenu()
       var input = getInput()
-      input match{
+      input match {
         case "q" => do break(2)
         case "n" => consolegameloop()
         case "a" => aiVsAi()
@@ -47,7 +43,7 @@ def mapEditor(map: List[Planet]): List[Planet]/Multibreak = {
   while(true){
     drawMapEditorMenu()
     var input = getInput()
-      input match{
+      input match {
         case "q" => do break(2)
         case "r" => do break(1)
         case "d" => result = initialGameState().planets
@@ -79,14 +75,15 @@ def mapEditor(map: List[Planet]): List[Planet]/Multibreak = {
                 }
             }}
         }with Multibreak {
-    def break(n) = {
-      val numberOfBreaks: Int = n - 1
-      if(numberOfBreaks > 0){
-        do break(n)
+          def break(n) = {
+            val numberOfBreaks: Int = n - 1
+            if(numberOfBreaks > 0){
+              do break(n)
+            }
+          }
+        }
       }
-    }
-  }}
-        case _ => doNothing()
+      case _ => doNothing()
       }
   }
   }with Multibreak {
@@ -108,61 +105,61 @@ def consolegameloop() : Unit/Multibreak = {
   var planets:List[Planet] = state.planets
 
   // updateting planets using effects
-def planetschangable = new UpdatePlanets{
-  def updatePlanet(planet: Planet) = {
-    if(planet.id == ""){return ()}
-  var index = 0
-  var target = -1
-  planets.foreach{x =>
-  if(x.id == planet.id){
-    target = index
-  }
-  index = index + 1
-  }
-  if(target > -1){
-  planets = planets.replace(target, planet)}
-  // for unit
-  ()
-  }
-}
-
-// updating gamestate using effects
-def gamesate = new UpdateGamestate{
-  def changePlanets(p:List[Planet]) = {
-    val newstate = GameState(
-      screen = state.screen,
-      planets = p,
-      selected = state.selected)
-    state = newstate
+  def planetschangable = new UpdatePlanets{
+    def updatePlanet(planet: Planet) = {
+      if(planet.id == ""){return ()}
+    var index = 0
+    var target = -1
+    planets.foreach{x =>
+    if(x.id == planet.id){
+      target = index
+    }
+    index = index + 1
+    }
+    if(target > -1){
+    planets = planets.replace(target, planet)}
+    // for unit
     ()
+    }
   }
 
-  def cahngeSelected(s: String) = {
-    val newstate = GameState(
-      screen = state.screen,
-      planets = state.planets,
-      selected = s)
-    state = newstate
-    ()
-  }
+  // updating gamestate using effects
+  def gamesate = new UpdateGamestate{
+    def changePlanets(p:List[Planet]) = {
+      val newstate = GameState(
+        screen = state.screen,
+        planets = p,
+        selected = state.selected)
+      state = newstate
+      ()
+    }
 
-  def changeScreen(newScreen: Screen) = {
-    val newstate = GameState(
-      screen = newScreen,
-      planets = state.planets,
-      selected = state.selected)
-    state = newstate
-    ()
-  }
-  def getScreen() = {state.screen}
-  def getGameState() = {state}
-  def newGameState(g: GameState) ={
-    state = g
-  }
-  def getPlanests() = {state.planets}
-  def getSelected() = {state.selected}
+    def cahngeSelected(s: String) = {
+      val newstate = GameState(
+        screen = state.screen,
+        planets = state.planets,
+        selected = s)
+      state = newstate
+      ()
+    }
 
-}
+    def changeScreen(newScreen: Screen) = {
+      val newstate = GameState(
+        screen = newScreen,
+        planets = state.planets,
+        selected = state.selected)
+      state = newstate
+      ()
+    }
+    def getScreen() = {state.screen}
+    def getGameState() = {state}
+    def newGameState(g: GameState) ={
+      state = g
+    }
+    def getPlanests() = {state.planets}
+    def getSelected() = {state.selected}
+
+  }
 
 // actual loop
 try{
@@ -190,7 +187,7 @@ try{
         case "q" => do break(2)
         case "r" => do break(1)
         case _ => ()
-        }
+      }
       var p: Planet = findPlanetbyID(planets, input)
       if(p.id != "-1"){
         if(gamesate.getSelected() == "" || gamesate.getSelected() == input){
@@ -246,61 +243,61 @@ def pVP() : Unit/Multibreak = {
   var player2Selected: String = "" 
 
   // updateting planets using effects
-def planetschangable = new UpdatePlanets{
-  def updatePlanet(planet: Planet) = {
-    if(planet.id == ""){return ()}
-  var index = 0
-  var target = -1
-  planets.foreach{x =>
-  if(x.id == planet.id){
-    target = index
-  }
-  index = index + 1
-  }
-  if(target > -1){
-  planets = planets.replace(target, planet)}
-  // for unit
-  ()
-  }
-}
-
-// updating gamestate using effects
-def gamesate = new UpdateGamestate{
-  def changePlanets(p:List[Planet]) = {
-    val newstate = GameState(
-      screen = state.screen,
-      planets = p,
-      selected = state.selected)
-    state = newstate
+  def planetschangable = new UpdatePlanets{
+    def updatePlanet(planet: Planet) = {
+      if(planet.id == ""){return ()}
+    var index = 0
+    var target = -1
+    planets.foreach{x =>
+    if(x.id == planet.id){
+      target = index
+    }
+    index = index + 1
+    }
+    if(target > -1){
+    planets = planets.replace(target, planet)}
+    // for unit
     ()
+    }
   }
 
-  def cahngeSelected(s: String) = {
-    val newstate = GameState(
-      screen = state.screen,
-      planets = state.planets,
-      selected = s)
-    state = newstate
-    ()
-  }
+  // updating gamestate using effects
+  def gamesate = new UpdateGamestate{
+    def changePlanets(p:List[Planet]) = {
+      val newstate = GameState(
+        screen = state.screen,
+        planets = p,
+        selected = state.selected)
+      state = newstate
+      ()
+    }
 
-  def changeScreen(newScreen: Screen) = {
-    val newstate = GameState(
-      screen = newScreen,
-      planets = state.planets,
-      selected = state.selected)
-    state = newstate
-    ()
-  }
-  def getScreen() = {state.screen}
-  def getGameState() = {state}
-  def newGameState(g: GameState) ={
-    state = g
-  }
-  def getPlanests() = {state.planets}
-  def getSelected() = {state.selected}
+    def cahngeSelected(s: String) = {
+      val newstate = GameState(
+        screen = state.screen,
+        planets = state.planets,
+        selected = s)
+      state = newstate
+      ()
+    }
 
-}
+    def changeScreen(newScreen: Screen) = {
+      val newstate = GameState(
+        screen = newScreen,
+        planets = state.planets,
+        selected = state.selected)
+      state = newstate
+      ()
+    }
+    def getScreen() = {state.screen}
+    def getGameState() = {state}
+    def newGameState(g: GameState) ={
+      state = g
+    }
+    def getPlanests() = {state.planets}
+    def getSelected() = {state.selected}
+
+  }
 
 // actual loop
 try{
@@ -329,7 +326,7 @@ try{
         case "q" => do break(2)
         case "r" => do break(1)
         case _ => ()
-        }
+      }
       var p: Planet = findPlanetbyID(planets, input)
       if(p.id != "-1"){
         if(gamesate.getSelected() == "" || gamesate.getSelected() == input){
@@ -396,61 +393,61 @@ def aiVsAi(): Unit/Multibreak = {
   var planets:List[Planet] = state.planets
 
   // updateting planets using effects
-def planetschangable = new UpdatePlanets{
-  def updatePlanet(planet: Planet) = {
-    if(planet.id == ""){return ()}
-  var index = 0
-  var target = -1
-  planets.foreach{x =>
-  if(x.id == planet.id){
-    target = index
-  }
-  index = index + 1
-  }
-  if(target > -1){
-  planets = planets.replace(target, planet)}
-  // for unit
-  ()
-  }
-}
-
-// updating gamestate using effects
-def gamesate = new UpdateGamestate{
-  def changePlanets(p:List[Planet]) = {
-    val newstate = GameState(
-      screen = state.screen,
-      planets = p,
-      selected = state.selected)
-    state = newstate
+  def planetschangable = new UpdatePlanets{
+    def updatePlanet(planet: Planet) = {
+      if(planet.id == ""){return ()}
+    var index = 0
+    var target = -1
+    planets.foreach{x =>
+    if(x.id == planet.id){
+      target = index
+    }
+    index = index + 1
+    }
+    if(target > -1){
+    planets = planets.replace(target, planet)}
+    // for unit
     ()
+    }
   }
 
-  def cahngeSelected(s: String) = {
-    val newstate = GameState(
-      screen = state.screen,
-      planets = state.planets,
-      selected = s)
-    state = newstate
-    ()
-  }
+  // updating gamestate using effects
+  def gamesate = new UpdateGamestate{
+    def changePlanets(p:List[Planet]) = {
+      val newstate = GameState(
+        screen = state.screen,
+        planets = p,
+        selected = state.selected)
+      state = newstate
+      ()
+    }
 
-  def changeScreen(newScreen: Screen) = {
-    val newstate = GameState(
-      screen = newScreen,
-      planets = state.planets,
-      selected = state.selected)
-    state = newstate
-    ()
-  }
-  def getScreen() = {state.screen}
-  def getGameState() = {state}
-  def newGameState(g: GameState) ={
-    state = g
-  }
-  def getPlanests() = {state.planets}
-  def getSelected() = {state.selected}
+    def cahngeSelected(s: String) = {
+      val newstate = GameState(
+        screen = state.screen,
+        planets = state.planets,
+        selected = s)
+      state = newstate
+      ()
+    }
 
-}
+    def changeScreen(newScreen: Screen) = {
+      val newstate = GameState(
+        screen = newScreen,
+        planets = state.planets,
+        selected = state.selected)
+      state = newstate
+      ()
+    }
+    def getScreen() = {state.screen}
+    def getGameState() = {state}
+    def newGameState(g: GameState) ={
+      state = g
+    }
+    def getPlanests() = {state.planets}
+    def getSelected() = {state.selected}
+
+  }
 
 // actual loop
 try{
@@ -477,7 +474,7 @@ try{
         case "q" => do break(2)
         case "r" => do break(1)
         case _ => ()
-        }
+      }
       // PlayerAI turn
       var aimovep:AIMovedecision = makeMoveDessision(gamesate.getGameState(), Player())
       var didMovep: Bool = aimovep.isturnUsed
@@ -486,7 +483,6 @@ try{
       printAIMove(didMovep, fromp, top)
       moveShips(findPlanetbyID(planets, fromp), findPlanetbyID(planets, top), Player()){planetschangable}
       
-
       // AI turn
       var aimove:AIMovedecision = makeMoveDessision(gamesate.getGameState(), AI())
       var didMove: Bool = aimove.isturnUsed
@@ -525,19 +521,19 @@ try{
 
 // Helper functions-------------------------------------
 
-def applyWinCon(g:GameState){s: UpdateGamestate}: Unit ={
+def applyWinCon(g:GameState){s: UpdateGamestate}: Unit = {
   val stateOfGame: Wincon = checkWinOrLose(g)
-  stateOfGame match{
+  stateOfGame match {
     case InGame() => {doNothing()}
     case Win() => {s.changeScreen(EndWin())}
     case Lose() => {s.changeScreen(EndLose())}
   }
 }
 
-def updatePlanets(p:List[Planet]){u: UpdatePlanets}: Unit ={
+def updatePlanets(p:List[Planet]){u: UpdatePlanets}: Unit = {
   p.foreach {x=>
-  val changedPlanet: Planet = calculatePlanetUpdate(x)
-  u.updatePlanet(changedPlanet)
+    val changedPlanet: Planet = calculatePlanetUpdate(x)
+    u.updatePlanet(changedPlanet)
   }
 }
 
@@ -545,11 +541,8 @@ def updateGamestate(p:List[Planet]){s: UpdateGamestate}: Unit = {
   s.changePlanets(p)
 }
 
-def changeShipsOfPlanet(planet: Planet, shipsPlayernew: Int,
-                  shipsAInew:Int){u: UpdatePlanets}: Unit ={
-  val newPlanet: Planet = Planet(id=planet.id, x=planet.x,
-  y=planet.y, radius=planet.radius, shipsPlayer=shipsPlayernew,
-  shipsAI=shipsAInew, owner=planet.owner)
+def changeShipsOfPlanet(planet: Planet, shipsPlayernew: Int, shipsAInew:Int){u: UpdatePlanets}: Unit = {
+  val newPlanet: Planet = Planet(id = planet.id, x = planet.x, y = planet.y, radius = planet.radius, shipsPlayer = shipsPlayernew, shipsAI = shipsAInew, owner = planet.owner)
   u.updatePlanet(newPlanet)
 }
 

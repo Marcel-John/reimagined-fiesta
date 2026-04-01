@@ -21,24 +21,28 @@ val battelstrngthPlayer = spawnAI + 1
 val battelstrngthAI = spawnPlayer + 1
 val battelstrngthNeutral = 0
 
+// some default planets
 val Planettest: Planet= Planet(id="-1", x=0, y=0, radius=0, shipsPlayer=0, shipsAI=0, owner=Neutral())
 val Planet0: Planet= Planet(id="0", x=0, y=0, radius=100, shipsPlayer=49, shipsAI=0, owner=Player())
 val Planet1: Planet= Planet(id="1", x=100, y=100, radius=100, shipsPlayer=0, shipsAI=100, owner=AI())
 val freeforAI: Planet= Planet(id="2", x=100, y=100, radius=100, shipsPlayer=0, shipsAI=0, owner=Neutral())
 val defaultPlanet: Planet = Planet(id="-1", x=0, y=0, radius=0, shipsPlayer=0, shipsAI=0, owner=Neutral())
 
+// creating an inital GameState
 def initialGameState(): GameState = {
   GameState(screen = Start(),
   planets = [Planet0, Planet1, freeforAI],
   selected = "")
 }
 
+// A Gamestate with a different map
 def secondmap(): GameState = {
   GameState(screen = Start(),
   planets = [Planet0, Planet1, freeforAI, Planet(id="3", x=100, y=100, radius=100, shipsPlayer=0, shipsAI=0, owner=Neutral()), Planet(id="4", x=0, y=0, radius=100, shipsPlayer=49, shipsAI=0, owner=Player())],
   selected = "")
 }
 
+// adding Ships to a Planet
 def addShipstoPlanet(p:Planet, o: Owner, s: Int): Planet ={
   var result = p
   o match{
@@ -49,6 +53,7 @@ def addShipstoPlanet(p:Planet, o: Owner, s: Int): Planet ={
   result
 }
 
+// updating the List of Planets
 def updateListOfPlanets(l: List[Planet], p: Planet): List[Planet] = {
   var result = l
   var index = 0
@@ -64,6 +69,7 @@ def updateListOfPlanets(l: List[Planet], p: Planet): List[Planet] = {
   l
 }
 
+// finding a Planet given an ID
 def findPlanetbyID(planets: List[Planet], id: String): Planet = {
   var result: Planet = Planettest
   planets.foreach{x=>
@@ -74,6 +80,7 @@ def findPlanetbyID(planets: List[Planet], id: String): Planet = {
   result
 }
 
+// computing the half amount of the ships
 def calculateHalfOfShips(ships: Int): Int = {
   var result = 0
   if(ships.mod(2) == 0){
@@ -109,6 +116,7 @@ def calculatePlanetUpdate(p: Planet): Planet = {
   result
 }
 
+// computing the number of ships to spawn
 def calculateamountTSpawn(p: Planet): Shipstorage = {
   val owner: Owner = p.owner
   var result: Shipstorage = Shipstorage(0,0)
@@ -120,6 +128,7 @@ def calculateamountTSpawn(p: Planet): Shipstorage = {
   result
 }
 
+// computing the battles
 def calculatebattel(p: Planet): Shipstorage = {
   var shipsPlayer: Int = p.shipsPlayer
   var shipsAI: Int = p.shipsAI
@@ -130,6 +139,7 @@ def calculatebattel(p: Planet): Shipstorage = {
   Shipstorage(shipsPlayer, shipsAI)
 }
 
+// helper function
 def subtractionNotNegative(ships: Int, amout: Int): Int = {
   var result = ships
 
@@ -148,6 +158,7 @@ def addNotNegative(x: Int, y: Int): Int = {
   result
 }
 
+// changing the Owner of a Planet
 def changeownershipPlanet(p: Planet): Owner = {
   var result: Owner = p.owner
 
@@ -162,6 +173,7 @@ def changeownershipPlanet(p: Planet): Owner = {
   result
 }
 
+// checking the Wincondition
 def checkWinOrLose(g: GameState): Wincon = {
   val planets: List[Planet] = g.planets
   var hasPlayerPlanets: Bool = false
@@ -188,6 +200,7 @@ def checkWinOrLose(g: GameState): Wincon = {
   result
 }
 
+// helper function to check the Owner of a Planet an help with readability
 def isOwnedByPlayer(p: Planet): Bool = {
   val owner : Owner = p.owner
   var result : Bool = false
@@ -227,6 +240,7 @@ def isOwnedByNeutral(p: Planet): Bool = {
   result
 }
 
+// checking if an Owner is the Player
 def isPlayerlogical(o: Owner): Bool = {
   o match {
     case Player() => true

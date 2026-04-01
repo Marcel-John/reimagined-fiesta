@@ -79,6 +79,7 @@ def race[A](left: Promise[A], right: Promise[A]): Promise[A] = {
   result
 }
 
+// getting the Input with a timer
 def readlnWithTimeout(timeoutMs: Int): Option[String] = withReadline { handle =>
   race(
     promise(box { sleep(timeoutMs); None() }),
@@ -86,6 +87,7 @@ def readlnWithTimeout(timeoutMs: Int): Option[String] = withReadline { handle =>
   ).await
 }
 
+// getting the Input with a fixed 2 sec timer
 def getInputWithTimeout(): String = {
   val input = readlnWithTimeout(2000)
   input.getOrElse { "no input" }
