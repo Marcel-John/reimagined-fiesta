@@ -8,9 +8,9 @@ interface UpdatePlanets {
 }
 
 interface UpdateGamestate {
-  def changePlanets(planets:List[Planet]): Unit
-  def cahngeSelected(selected: String): Unit
-  def changeScreen(newScreen: Screen): Unit
+  def updatePlanetsInGamestate(planets:List[Planet]): Unit
+  def updateSelected(selected: String): Unit
+  def updateScreen(newScreen: Screen): Unit
   def getScreen(): Screen
   def getPlanests(): List[Planet]
   def getGameState(): GameState
