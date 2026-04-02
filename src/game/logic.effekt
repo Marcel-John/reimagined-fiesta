@@ -30,16 +30,12 @@ val defaultPlanet: Planet = Planet(id="-1", x=0, y=0, radius=0, shipsPlayer=0, s
 
 // creating an inital GameState
 def initialGameState(): GameState = {
-  GameState(screen = Start(),
-  planets = [Planet0, Planet1, freeforAI],
-  selected = "")
+  GameState(screen = Start(), planets = [Planet0, Planet1, freeforAI], selected = "")
 }
 
 // A Gamestate with a different map
 def secondmap(): GameState = {
-  GameState(screen = Start(),
-  planets = [Planet0, Planet1, freeforAI, Planet(id="3", x=100, y=100, radius=100, shipsPlayer=0, shipsAI=0, owner=Neutral()), Planet(id="4", x=0, y=0, radius=100, shipsPlayer=49, shipsAI=0, owner=Player())],
-  selected = "")
+  GameState(screen = Start(), planets = [Planet0, Planet1, freeforAI, Planet(id="3", x=100, y=100, radius=100, shipsPlayer=0, shipsAI=0, owner=Neutral()), Planet(id="4", x=0, y=0, radius=100, shipsPlayer=49, shipsAI=0, owner=Player())], selected = "")
 }
 
 // adding Ships to a Planet
@@ -141,7 +137,7 @@ def addNotNegative(x: Int, y: Int): Int = {
   }
 }
 
-// changing the Owner of a Planet
+// returns the new owner of a planet
 def changeownershipPlanet(p: Planet): Owner = {
   val aIHasMoreShips: Bool = p.shipsPlayer == 0 && p.shipsAI > 0
   val playerHasMoreShips: Bool = p.shipsAI == 0 && p.shipsPlayer > 0
@@ -230,3 +226,42 @@ def isPlayerlogical(o: Owner): Bool = {
 
 // helping readabyility
 def doNothing(): Unit = {}
+
+// comparing owners
+// normal == results in a typ error so the type gets first translated in to strings and then compared
+def isSameOwner(o1: Owner, o2: Owner): Bool = {
+  val typeOne = o1 match {
+    case Player() => "p"
+    case AI() => "a"
+    case Neutral() => "n"
+  }
+  val typeTwo = o2 match {
+    case Player() => "p"
+    case AI() => "a"
+    case Neutral() => "n"
+  }
+  typeOne == typeTwo
+}
+
+def isSameWincon(w1: Wincon, w2: Wincon): Bool = {
+  val typeOne = w1 match {
+    case Win() => "w"
+    case Lose() => "l"
+    case InGame() => "i"
+  }
+  val typeTwo = w2 match {
+    case Win() => "w"
+    case Lose() => "l"
+    case InGame() => "i"
+  }
+  typeOne == typeTwo
+}
+
+def isPlanetIdentical(p1: Planet, p2: Planet): Bool = {
+  val sameId = p1.id == p2.id
+  val samePos = p1.x == p2.x && p1.y == p2.y
+  val sameRad = p1.radius == p2.radius
+  val sameShips = p1.shipsPlayer == p2.shipsPlayer && p1.shipsAI == p2.shipsAI
+  val sameOwner = isOwnedByAI(p1) && isOwnedByAI(p1) || isOwnedByPlayer(p1) && isOwnedByPlayer(p2) || isOwnedByNeutral(p1) && isOwnedByNeutral(p2)
+  sameId && samePos && sameRad && sameShips && sameOwner
+}

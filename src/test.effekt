@@ -2,9 +2,112 @@ module src/test
 
 import test
 import src/lib
+import src/game/logic
+import src/game/state
 
-def main() = mainSuite("lib") {
-  test("Hello world") {
-    assertEqual(helloWorld(), "Hello, world!")
+def main() = mainSuite("game logic") {
+  test("Adding Ships") {
+    val firstPlanet = addShipstoPlanet(Planet0, Player(), 100)
+    val secondPlanet = addShipstoPlanet(firstPlanet, AI(), -200)
+    val lastPlanet = addShipstoPlanet(secondPlanet, Neutral(), 48)
+
+    assert(lastPlanet.shipsPlayer, 149)
+    assert(lastPlanet.shipsAI, 0)
+  }
+  test("Ships total amount") {
+    val firstPlanet = addShipstoPlanet(Planet0, Player(), 100)
+    val secondPlanet = addShipstoPlanet(firstPlanet, AI(), 200)
+    val lastPlanet = addShipstoPlanet(secondPlanet, Neutral(), 48)
+    val shipsPlayer = shipsTotalPlayer([Planet0, lastPlanet])
+    val shipsAi = shipsTotalAi([Planet0, lastPlanet])
+
+    assert(shipsPlayer, 198)
+    assert(shipsAi, 200)
+  }
+  test("identical Planets") {
+    assert(isPlanetIdentical(Planet0, Planet0), true)
+    assert(isPlanetIdentical(Planet1, Planet1), true)
+    assert(isPlanetIdentical(Planet0, Planet1), false)
+  }
+  test("updating Planets") {
+    val planets1 = updateListOfPlanets([Planet0, Planet1], Planet0)
+    val planets2 = updateListOfPlanets([Planet0, Planet1], freeforAI)
+    val planets3 = updateListOfPlanets([Planet0, Planet1], Planet(id="0", x=0, y=0, radius=100, shipsPlayer=100, shipsAI=10, owner=Player()))
+
+    planets1.foreach {x =>
+      assert(isPlanetIdentical(x, Planet1) || isPlanetIdentical(x, Planet0), true)
+    }
+    planets2.foreach {x =>
+      assert(isPlanetIdentical(x, Planet1) || isPlanetIdentical(x, Planet0), true)
+    }
+    planets3.foreach {x =>
+      assert(isPlanetIdentical(x, Planet1) || isPlanetIdentical(x, Planet(id="0", x=0, y=0, radius=100, shipsPlayer=100, shipsAI=10, owner=Player())), true)
+    }
+  }
+  test("finding Planets") {
+    val l = [Planet0, Planet1]
+    assert(isPlanetIdentical(findPlanetbyID(l, "0"), Planet0), true)
+    assert(isPlanetIdentical(findPlanetbyID(l, "1"), Planet0), false)
+    assert(isPlanetIdentical(findPlanetbyID(l, "1"), Planet1), true)
+    assert(isPlanetIdentical(findPlanetbyID(l, "4"), Planet0), false)
+    assert(isPlanetIdentical(findPlanetbyID(l, "50"), Planettest), true)
+  }
+  test("compute half") {
+    assert(calculateHalfOfShips(0), 0)
+    assert(calculateHalfOfShips(10), 5)
+    assert(calculateHalfOfShips(1), 1)
+    assert(calculateHalfOfShips(5), 3)
+  }
+  test("Planet update (spawning, combat, etc.)") {
+    assert(isPlanetIdentical(calculatePlanetUpdate(Planet0), Planet(id="0", x=0, y=0, radius=100, shipsPlayer=50, shipsAI=0, owner=Player())), true)
+    assert(isPlanetIdentical(calculatePlanetUpdate(Planet(id="0", x=0, y=0, radius=100, shipsPlayer=0, shipsAI=50, owner=Player())), Planet(id="0", x=0, y=0, radius=100, shipsPlayer=0, shipsAI=48, owner=AI())), true)
+    assert(isPlanetIdentical(calculatePlanetUpdate(Planet(id="0", x=0, y=0, radius=100, shipsPlayer=50, shipsAI=50, owner=Player())), Planet(id="0", x=0, y=0, radius=100, shipsPlayer=49, shipsAI=48, owner=Player())), true)
+  }
+  test("subtraction") {
+    assert(subtractionNotNegative(40,20), 20)
+    assert(subtractionNotNegative(0,0), 0)
+    assert(subtractionNotNegative(0,20), 0)
+    assert(subtractionNotNegative(53,78), 0)
+  }
+  test("addNotNegative") {
+    assert(addNotNegative(2,1),3)
+    assert(addNotNegative(2,-1),1)
+    assert(addNotNegative(2,-31),0)
+    assert(addNotNegative(-42,-31),0)
+  }
+  test("same Owner") {
+    assert(isSameOwner(Player(), Player()), true)
+    assert(isSameOwner(Player(), AI()), false)
+    assert(isSameOwner(Player(), Neutral()), false)
+    assert(isSameOwner(AI(), AI()), true)
+    assert(isSameOwner(Neutral(), Neutral()), true)
+    assert(isSameOwner(AI(), Neutral()), false)
+  }
+  test("new Owner") {
+    assert(isSameOwner(changeownershipPlanet(Planet0), Player()), true)
+    assert(isSameOwner(changeownershipPlanet(Planet1), AI()), true)
+    assert(isSameOwner(changeownershipPlanet(freeforAI), Neutral()), true)
+    assert(isSameOwner(changeownershipPlanet(Planet(id="0", x=0, y=0, radius=100, shipsPlayer=0, shipsAI=10, owner=Player())), AI()), true)
+  }
+  test("check Owner of the Planet") {
+    assert(isOwnedByPlayer(Planet0), true)
+    assert(isOwnedByPlayer(Planet1), false)
+    assert(isOwnedByAI(Planet1), true)
+    assert(isOwnedByNeutral(freeforAI), true)
+  }
+  test("check Wincon") {
+    assert(isSameWincon(Win(), Win()), true)
+    assert(isSameWincon(Lose(), Lose()), true)
+    assert(isSameWincon(InGame(), InGame()), true)
+    assert(isSameWincon(Win(), Lose()), false)
+    assert(isSameWincon(Lose(), InGame()), false)
+    assert(isSameWincon(InGame(), Win()), false)
+    assert(isSameWincon(checkWinOrLose(initialGameState()), InGame()), true)
+    assert(isSameWincon(checkWinOrLose(GameState(screen = Start(), planets = [Planet0], selected = "")), Win()), true)
+    assert(isSameWincon(checkWinOrLose(GameState(screen = Start(), planets = [Planet1], selected = "")), Lose()), true)
+  }
+  test("has Most Ships") {
+    assert(hasMostShips(Planet0, [Planet0], Player()), true)
+    assert(hasMostShips(Planet0, [Planet0, Planet1, freeforAI], Player()), false)
   }
 }

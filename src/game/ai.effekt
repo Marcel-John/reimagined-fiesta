@@ -15,11 +15,11 @@ record AIMovedecision(
 
 // getting all possible moves
 def allAIMoves(allPlanets: List[Planet]): List[AIMove] = {
-flatMap(allPlanets) { p1 =>
-    map(allPlanets) { p2 =>
-      AIMove(p1, p2)
+  flatMap(allPlanets) { p1 =>
+      map(allPlanets) { p2 =>
+        AIMove(p1, p2)
+      }
     }
-  }
 }
 
 // scoring a given Move
