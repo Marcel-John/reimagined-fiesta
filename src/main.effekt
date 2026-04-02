@@ -9,12 +9,10 @@ import src/game/ai
 
 
 def main(): Unit = {
-//console version
+  // console version
   mainMenu()
-
-  println(helloWorld())
 }
-
+// the main menu
 def mainMenu() : Unit = {
   var map: List[Planet] = initialGameState().planets
   try{
@@ -36,7 +34,7 @@ def mainMenu() : Unit = {
     }
   }
 }
-
+// the map editor
 def mapEditor(map: List[Planet]): List[Planet]/Multibreak = {
   var result: List[Planet] = map
   try{
@@ -96,7 +94,7 @@ def mapEditor(map: List[Planet]): List[Planet]/Multibreak = {
 result
 }
 
-
+// the game loop for the console
 def consolegameloop() : Unit/Multibreak = {
   
   // some inital states
@@ -234,6 +232,7 @@ try{
   }
 }
 //---------------------------------------------------------------------------------------------------------------
+// PvP game loop
 def pVP() : Unit/Multibreak = {
   // some inital states
   var state: GameState = initialGameState()
@@ -386,6 +385,7 @@ try{
   }
 }
 //---------------------------------------------------------------------------------------------
+// ai vs ai game loop
 def aiVsAi(): Unit/Multibreak = {
   // some inital states
   var state: GameState = initialGameState()
@@ -519,7 +519,7 @@ try{
 }
 
 // Helper functions-------------------------------------
-
+// checking the win con
 def applyWinCon(g:GameState){s: UpdateGamestate}: Unit = {
   val stateOfGame: Wincon = checkWinOrLose(g)
   stateOfGame match {
@@ -528,23 +528,23 @@ def applyWinCon(g:GameState){s: UpdateGamestate}: Unit = {
     case Lose() => {s.changeScreen(EndLose())}
   }
 }
-
+// updating planets
 def updatePlanets(p:List[Planet]){u: UpdatePlanets}: Unit = {
   p.foreach {x=>
     val changedPlanet: Planet = calculatePlanetUpdate(x)
     u.updatePlanet(changedPlanet)
   }
 }
-
+// updating the gamstate
 def updateGamestate(p:List[Planet]){s: UpdateGamestate}: Unit = {
   s.changePlanets(p)
 }
-
+// changing the number of ships on a planet
 def changeShipsOfPlanet(planet: Planet, shipsPlayernew: Int, shipsAInew:Int){u: UpdatePlanets}: Unit = {
   val newPlanet: Planet = Planet(id = planet.id, x = planet.x, y = planet.y, radius = planet.radius, shipsPlayer = shipsPlayernew, shipsAI = shipsAInew, owner = planet.owner)
   u.updatePlanet(newPlanet)
 }
-
+// move ships from one planet to another
 def moveShips(from: Planet, to: Planet, actor: Owner){u: UpdatePlanets}: Unit = {
   actor match {
     case Player() => {
