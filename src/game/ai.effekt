@@ -15,14 +15,11 @@ record AIMovedecision(
 
 // getting all possible moves
 def allAIMoves(allPlanets: List[Planet]): List[AIMove] = {
-  var result:List[AIMove] = []
-
-  result = flatMap(allPlanets) { p1 =>
+flatMap(allPlanets) { p1 =>
     map(allPlanets) { p2 =>
       AIMove(p1, p2)
     }
   }
-  result
 }
 
 // scoring a given Move
@@ -61,7 +58,7 @@ def makeMoveDessision(g: GameState, o: Owner): AIMovedecision = {
   var bestMove: AIMove = AIMove(defaultPlanet, defaultPlanet)
 
   allMoves.foreach{m=>
-  var score: Int = simplescoreMove(m, planets, o)
+  val score: Int = simplescoreMove(m, planets, o)
   if(score > bestscore){
     bestMove = m
     bestscore = score

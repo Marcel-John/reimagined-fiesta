@@ -32,6 +32,7 @@ record GameState (
 )
 
 // returning the total number of Ships the Player has
+// var is used to sum up
 def shipsTotalPlayer(p: List[Planet]): Int = {
   var numShips: Int = 0
   p.foreach{x=>
@@ -41,6 +42,7 @@ def shipsTotalPlayer(p: List[Planet]): Int = {
 }
 
 // returning the total number of Ships the Ai has
+// var is used to sum up
 def shipsTotalAi(p: List[Planet]): Int = {
   var numShips: Int = 0
   p.foreach{x=>
@@ -133,14 +135,14 @@ def isGameOverscreen(s: Screen) : Bool = s match {
 }
 
 def hasPlayerWon(s: Screen): Bool = {
-  var result = false
   if(isGameOverscreen(s)){
     s match {
-      case EndWin() => result = true
-      case _ => ()
+      case EndWin() => true
+      case _ => false
     }
+  }else{
+    false
   }
-  result
 }
 
 def printStartscreen(mode: String): Unit = {

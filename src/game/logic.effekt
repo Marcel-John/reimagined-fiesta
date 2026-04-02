@@ -43,19 +43,16 @@ def secondmap(): GameState = {
 }
 
 // adding Ships to a Planet
-def addShipstoPlanet(p:Planet, o: Owner, s: Int): Planet ={
-  var result = p
+def addShipstoPlanet(p:Planet, o: Owner, s: Int): Planet = {
   o match{
-    case Player() => {result = Planet(p.id, p.x, p.y, p.radius, addNotNegative(p.shipsPlayer, s), p.shipsAI, p.owner)}
-    case AI() => {result = Planet(p.id, p.x, p.y, p.radius, p.shipsPlayer, addNotNegative(p.shipsAI, s), p.owner)}
-    case Neutral() => {doNothing()}
+    case Player() => {Planet(p.id, p.x, p.y, p.radius, addNotNegative(p.shipsPlayer, s), p.shipsAI, p.owner)}
+    case AI() => {Planet(p.id, p.x, p.y, p.radius, p.shipsPlayer, addNotNegative(p.shipsAI, s), p.owner)}
+    case Neutral() => {p}
   }
-  result
 }
 
 // updating the List of Planets
 def updateListOfPlanets(l: List[Planet], p: Planet): List[Planet] = {
-  var result = l
   var index = 0
   var target = -1
   l.foreach{x =>
@@ -65,8 +62,10 @@ def updateListOfPlanets(l: List[Planet], p: Planet): List[Planet] = {
   index = index + 1
   }
   if(target > -1){
-  result  = result.replace(target, p)}
-  l
+    l.replace(target, p)
+  } else {
+    l
+  }
 }
 
 // finding a Planet given an ID
@@ -82,50 +81,36 @@ def findPlanetbyID(planets: List[Planet], id: String): Planet = {
 
 // computing the half amount of the ships
 def calculateHalfOfShips(ships: Int): Int = {
-  var result = 0
   if(ships.mod(2) == 0){
-    result = ships / 2
+    ships / 2
   }else{
-    result = (ships + 1) / 2
+    (ships + 1) / 2
   }
-  result
 }
 
 // logic for updating planets
 def calculatePlanetUpdate(p: Planet): Planet = {
   var result: Planet = p
 
-  val SpawningShips: Shipstorage= calculateamountTSpawn(result)
-  result = Planet(result.id, result.x, result.y, result.radius,
-  result.shipsPlayer + SpawningShips.shipsPlayer,
-  result.shipsAI + SpawningShips.shipsAI,
-  result.owner)
+  val SpawningShips: Shipstorage = calculateamountTSpawn(result)
+  result = Planet(result.id, result.x, result.y, result.radius, result.shipsPlayer + SpawningShips.shipsPlayer, result.shipsAI + SpawningShips.shipsAI, result.owner)
 
   val shipsAfterBattle: Shipstorage= calculatebattel(result)
-  result = Planet(result.id, result.x, result.y, result.radius,
-  shipsAfterBattle.shipsPlayer,
-  shipsAfterBattle.shipsAI,
-  result.owner)
+  result = Planet(result.id, result.x, result.y, result.radius, shipsAfterBattle.shipsPlayer, shipsAfterBattle.shipsAI, result.owner)
 
   val owner: Owner = changeownershipPlanet(result)
-  result = Planet(result.id, result.x, result.y, result.radius,
-  result.shipsPlayer,
-  result.shipsAI,
-  owner)
-
-  result
+  // no longer returning a var
+  Planet(result.id, result.x, result.y, result.radius, result.shipsPlayer, result.shipsAI, owner)
 }
 
 // computing the number of ships to spawn
 def calculateamountTSpawn(p: Planet): Shipstorage = {
   val owner: Owner = p.owner
-  var result: Shipstorage = Shipstorage(0,0)
   owner match {
-    case Player() => {result = Shipstorage(spawnPlayer, 0)}
-    case AI() => {result = Shipstorage(0, spawnAI)}
-    case Neutral() => {doNothing()}
+    case Player() => {Shipstorage(spawnPlayer, 0)}
+    case AI() => {Shipstorage(0, spawnAI)}
+    case Neutral() => {Shipstorage(0,0)}
   }
-  result
 }
 
 // computing the battles
@@ -141,36 +126,35 @@ def calculatebattel(p: Planet): Shipstorage = {
 
 // helper function
 def subtractionNotNegative(ships: Int, amout: Int): Int = {
-  var result = ships
-
   if (ships > amout){
-    result = ships - amout
+    ships - amout
   }else{
-    result = 0
+    0
   }
-
-  result
 }
 
 def addNotNegative(x: Int, y: Int): Int = {
-  var result = x + y
-  if(result < 0){result = 0}
-  result
+  if(x + y < 0){
+    0
+  }else{
+    x + y
+  }
 }
 
 // changing the Owner of a Planet
 def changeownershipPlanet(p: Planet): Owner = {
-  var result: Owner = p.owner
+  val aIHasMoreShips: Bool = p.shipsPlayer == 0 && p.shipsAI > 0
+  val playerHasMoreShips: Bool = p.shipsAI == 0 && p.shipsPlayer > 0
 
-  if(p.shipsPlayer == 0 && p.shipsAI > 0){
-    result = AI()
+  if(playerHasMoreShips){
+    Player()
+  }else{
+    if(aIHasMoreShips){
+      AI()
+    }else{
+      p.owner
+    }
   }
-
-  if(p.shipsAI == 0 && p.shipsPlayer > 0){
-    result = Player()
-  }
-
-  result
 }
 
 // checking the Wincondition
@@ -178,7 +162,6 @@ def checkWinOrLose(g: GameState): Wincon = {
   val planets: List[Planet] = g.planets
   var hasPlayerPlanets: Bool = false
   var hasAiPlanets: Bool = false
-  var result = InGame()
 
   planets.foreach{x=>
   val p: Planet = x
@@ -189,55 +172,52 @@ def checkWinOrLose(g: GameState): Wincon = {
     hasAiPlanets = true
   }
   }
+  val hasWon: Bool = hasPlayerPlanets && not(hasAiPlanets)
+  val hasLost: Bool = not(hasPlayerPlanets) && hasAiPlanets
 
-  if(hasPlayerPlanets && not(hasAiPlanets)){
-    result = Win()
-  }
-  if(not(hasPlayerPlanets) && hasAiPlanets){
-    result = Lose()
+  if(hasWon){
+    Win() 
+  }else{
+    if(hasLost){
+      Lose()
+    }else{
+      InGame()
+    }
   }
 
-  result
 }
 
 // helper function to check the Owner of a Planet an help with readability
+// removed var but kept for readability
 def isOwnedByPlayer(p: Planet): Bool = {
   val owner : Owner = p.owner
-  var result : Bool = false
 
   owner match {
-    case Player() =>{result = true}
-    case AI() =>{result = false}
-    case Neutral() =>{result = false}
+    case Player() =>{true}
+    case AI() =>{false}
+    case Neutral() =>{false}
   }
-
-  result
 }
 
 def isOwnedByAI(p: Planet): Bool = {
   val owner : Owner = p.owner
-  var result : Bool = false
 
   owner match {
-    case Player() =>{result = false}
-    case AI() =>{result = true}
-    case Neutral() =>{result = false}
+    case Player() =>{false}
+    case AI() =>{true}
+    case Neutral() =>{false}
   }
 
-  result
 }
 
 def isOwnedByNeutral(p: Planet): Bool = {
   val owner : Owner = p.owner
-  var result : Bool = false
 
   owner match {
-    case Player() =>{result = false}
-    case AI() =>{result = false}
-    case Neutral() =>{result = true}
+    case Player() =>{false}
+    case AI() =>{false}
+    case Neutral() =>{true}
   }
-
-  result
 }
 
 // checking if an Owner is the Player

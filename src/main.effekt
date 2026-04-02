@@ -20,7 +20,7 @@ def mainMenu() : Unit = {
   try{
     while(true){
       printMainMenu()
-      var input = getInput()
+      val input = getInput()
       input match {
         case "q" => do break(2)
         case "n" => consolegameloop()
@@ -54,7 +54,6 @@ def mapEditor(map: List[Planet]): List[Planet]/Multibreak = {
           while(true){
             drawMapEditMode(selected)
             input = getInput()
-            var input = getInput()
             input match{
               case "q" => do break(3)
               case "r" => do break(1)
@@ -167,7 +166,7 @@ try{
     // managing the start screen
     if(isStartscreen(gamesate.getScreen())){
       printStartscreen("normal game")
-      var input = getInput()
+      val input = getInput()
       input match{
         case "s" => gamesate.changeScreen(Game())
         case "q" => do break(2)
@@ -181,14 +180,14 @@ try{
 
       // Player turn
       drawGameState(gamesate.getGameState(), Player())
-      var input: String = getInputWithTimeout()
+      val input: String = getInputWithTimeout()
       input match {
         case "" => gamesate.cahngeSelected("")
         case "q" => do break(2)
         case "r" => do break(1)
         case _ => ()
       }
-      var p: Planet = findPlanetbyID(planets, input)
+      val p: Planet = findPlanetbyID(planets, input)
       if(p.id != "-1"){
         if(gamesate.getSelected() == "" || gamesate.getSelected() == input){
           gamesate.cahngeSelected(input)
@@ -200,10 +199,10 @@ try{
       
 
       // AI turn
-      var aimove:AIMovedecision = makeMoveDessision(gamesate.getGameState(), AI())
-      var didMove: Bool = aimove.isturnUsed
-      var from: String = aimove.move.from.id
-      var to: String = aimove.move.to.id
+      val aimove:AIMovedecision = makeMoveDessision(gamesate.getGameState(), AI())
+      val didMove: Bool = aimove.isturnUsed
+      val from: String = aimove.move.from.id
+      val to: String = aimove.move.to.id
       printAIMove(didMove, from, to)
       moveShips(findPlanetbyID(planets, from), findPlanetbyID(planets, to), AI()){planetschangable}
       
@@ -214,9 +213,9 @@ try{
     }
 
     if(isGameOverscreen(gamesate.getScreen())){
-      var hasPlayerWon: Bool = hasPlayerWon(gamesate.getScreen())
+      val hasPlayerWon: Bool = hasPlayerWon(gamesate.getScreen())
       endScreen(hasPlayerWon)
-      var input: String = getInput()
+      val input: String = getInput()
       input match{
         case _ => {
           gamesate.newGameState(initialGameState())
@@ -305,7 +304,7 @@ try{
     // managing the start screen
     if(isStartscreen(gamesate.getScreen())){
       printStartscreen("PVP game")
-      var input = getInput()
+      val input = getInput()
       input match{
         case "s" => gamesate.changeScreen(Game())
         case "q" => do break(2)
@@ -366,9 +365,9 @@ try{
     }
 
     if(isGameOverscreen(gamesate.getScreen())){
-      var hasPlayerWon: Bool = hasPlayerWon(gamesate.getScreen())
+      val hasPlayerWon: Bool = hasPlayerWon(gamesate.getScreen())
       endScreen(hasPlayerWon)
-      var input: String = getInput()
+      val input: String = getInput()
       input match{
         case _ => {
           gamesate.newGameState(initialGameState())
@@ -455,7 +454,7 @@ try{
     // managing the start screen
     if(isStartscreen(gamesate.getScreen())){
       printStartscreen("AI VS AI")
-      var input = getInput()
+      val input = getInput()
       input match{
         case "s" => gamesate.changeScreen(Game())
         case "q" => do break(2)
@@ -469,25 +468,25 @@ try{
 
       // PlayerAI turn
       drawGameStateAIvsAI(gamesate.getGameState())
-      var input: String = getInputWithTimeout()
+      val input: String = getInputWithTimeout()
       input match {
         case "q" => do break(2)
         case "r" => do break(1)
         case _ => ()
       }
       // PlayerAI turn
-      var aimovep:AIMovedecision = makeMoveDessision(gamesate.getGameState(), Player())
-      var didMovep: Bool = aimovep.isturnUsed
-      var fromp: String = aimovep.move.from.id
-      var top: String = aimovep.move.to.id
+      val aimovep:AIMovedecision = makeMoveDessision(gamesate.getGameState(), Player())
+      val didMovep: Bool = aimovep.isturnUsed
+      val fromp: String = aimovep.move.from.id
+      val top: String = aimovep.move.to.id
       printAIMove(didMovep, fromp, top)
       moveShips(findPlanetbyID(planets, fromp), findPlanetbyID(planets, top), Player()){planetschangable}
       
       // AI turn
-      var aimove:AIMovedecision = makeMoveDessision(gamesate.getGameState(), AI())
-      var didMove: Bool = aimove.isturnUsed
-      var from: String = aimove.move.from.id
-      var to: String = aimove.move.to.id
+      val aimove:AIMovedecision = makeMoveDessision(gamesate.getGameState(), AI())
+      val didMove: Bool = aimove.isturnUsed
+      val from: String = aimove.move.from.id
+      val to: String = aimove.move.to.id
       printAIMove(didMove, from, to)
       moveShips(findPlanetbyID(planets, from), findPlanetbyID(planets, to), AI()){planetschangable}
       
@@ -498,9 +497,9 @@ try{
     }
 
     if(isGameOverscreen(gamesate.getScreen())){
-      var hasPlayerWon: Bool = hasPlayerWon(gamesate.getScreen())
+      val hasPlayerWon: Bool = hasPlayerWon(gamesate.getScreen())
       endScreen(hasPlayerWon)
-      var input: String = getInput()
+      val input: String = getInput()
       input match{
         case _ => {
           gamesate.newGameState(initialGameState())
